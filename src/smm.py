@@ -46,7 +46,7 @@ class SMM(sklearn.base.BaseEstimator):
 	covariance_type : string, optional
 		String describing the type of covariance parameters to
 		use.  Must be one of 'spherical', 'tied', 'diag', 'full'.
-		Defaults to 'diag'.
+		Defaults to 'full'.
 
 	random_state: RandomState or an int seed (None by default)
 		A random number generator instance
@@ -57,13 +57,14 @@ class SMM(sklearn.base.BaseEstimator):
 
 	tol : float, optional
 		Convergence threshold. EM iterations will stop when average
-		gain in log-likelihood is below this threshold.  Defaults to 1e-3.
+		gain in log-likelihood is below this threshold.  Defaults to 1e-6.
 
 	n_iter : int, optional
-		Number of EM iterations to perform.
+		Number of EM iterations to perform. Defaults to 1000.
 
 	n_init : int, optional
-		Number of initializations to perform. the best results is kept
+		Number of initializations to perform. The best result is kept.
+		Defaults to 1.
 
 	params : string, optional
 		Controls which parameters are updated in the training
@@ -99,24 +100,43 @@ class SMM(sklearn.base.BaseEstimator):
 
 	"""	
 
-	def __init__(self, n_components = 1, covariance_type = 'full', random_state = None, tol = 1e-12, 
-		min_covar = 1e-6, n_iter = 1000, n_init = 1, params = 'wmcd', init_params = 'wmcd'):
+	def __init__(self, n_components=1, covariance_type=None, random_state=None, tol=None, 
+		min_covar=None, n_iter=None, n_init=None, params=None, init_params=None):
 
+		# Correct those parameters that are None
+		if covariance_type is None:
+			covariance_type = 'full'
+		if tol is None:
+			tol = 1e-6
+		if min_covar is None:
+			min_covar = 1e-6
+		if n_iter is None:
+			n_iter = 1000
+		if n_init is None:
+			n_init = 1
+		if params is None:
+			params = 'wmcd'
+		if init_params is None:
+			init_params = 'wmcd'
+	
+		# Store the parameters as class attributes
 		self._n_components = n_components
 		self._covariance_type = covariance_type
+		self._random_state = random_state
 		self._tol = tol
 		self._min_covar = min_covar
-		self._random_state = random_state
 		self._n_iter = n_iter
 		self._n_init = n_init
 		self._params = params
 		self._init_params = init_params
 
-		if covariance_type not in ['spherical', 'tied', 'diag', 'full']:
-			raise ValueError('Invalid value for covariance_type: %s' % covariance_type)
+		#if covariance_type not in ['spherical', 'tied', 'diag', 'full']:
+		#	covariance_type = 'full'
+			# raise ValueError('Invalid value for covariance_type: %s' % covariance_type)
 
-		if n_init < 1:
-			raise ValueError('SMM estimation requires at least one run.')
+		#if n_init < 1:
+		#	n_init = 1
+		#	# raise ValueError('SMM estimation requires at least one run.')
 
 		# self.weights_ = np.ones(self._n_components) / self._n_components
 
@@ -209,7 +229,7 @@ class SMM(sklearn.base.BaseEstimator):
 			except FloatingPointError, e:
 				raise dofMaximizationError(e.message)
 	
-	def fit(self, X):
+	def fit(self, X, y=None):
 		"""
 		@brief   Estimate model parameters with the expectation-maximization algorithm.
 		@details A initialization step is performed before entering the em
@@ -1017,6 +1037,10 @@ class SMM(sklearn.base.BaseEstimator):
 	def n_components(self):
 		"""@returns the number of distributions in the mixture"""
 		return self._n_components
+	
+	@n_components.setter
+	def n_components(self, n_components):
+		self._n_components = n_components 
 	
 	@property
 	def weights(self):

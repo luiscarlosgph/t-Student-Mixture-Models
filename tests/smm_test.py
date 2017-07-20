@@ -9,6 +9,9 @@
 import unittest
 import numpy as np
 import scipy
+import sklearn
+import sklearn.utils
+import sklearn.utils.estimator_checks
 
 # My imports
 import smm
@@ -155,7 +158,7 @@ class TestSMM(unittest.TestCase):
 		X = np.array([[77, 3, 124]])
 		proba = smm.SMM._multivariate_t_student_density_tied(X, means, covars, dfs, min_covar)[0][0]
 		self.assertTrue(np.fabs(correct_proba - proba) < eps)
-
+	
 	def test_one_component_em(self):
 		# Data
 		n_samples = 1000000
@@ -205,7 +208,7 @@ class TestSMM(unittest.TestCase):
 			# print('Covariance error:', cov_error)
 			# print('Deg. of freedom error:', df_error)
 			# print_params('test_1_component_em', mix_t, n_components, means, covars, dfs, weights)
-
+	
 	def test_several_component_em(self):
 		n_dim = 3 
 		min_df = 1
@@ -314,6 +317,8 @@ class TestSMM(unittest.TestCase):
 			real_aic = mix_t.aic(obs)
 			self.assertTrue(np.fabs(real_aic - estimated_aic) < aic_eps)
 
+	def test_sklearn_check_estimator(self):
+		sklearn.utils.estimator_checks.check_estimator(smm.SMM)
 
 if __name__ == '__main__':
     unittest.main()
