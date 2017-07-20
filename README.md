@@ -2,8 +2,8 @@
 Implementation of the paper: 'Robust mixture modelling using the t distribution', D. Peel and G. J. McLachlan.
 
 # Dependencies
-scikit-learn v0.18.1
-numpy v1.11.0
+* scikit-learn v0.18.1
+* numpy v1.11.0
 
 # Usage
 Please see example in [src/example.py](src/example.py).
