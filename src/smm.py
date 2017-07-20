@@ -204,11 +204,14 @@ class SMM(sklearn.base.BaseEstimator):
         @brief Perform the maximisation step of the EM algorithm.
 
         @param[in] X                List of k_features-dimensional data points. Each row corresponds 
-                                 to a single data point. It is an array_like, with shape (n, n_features).
-        @param[in] responsibilities matrix of responsibilities with the rows representing the points
-                                 and the columns representing each class in the mixture.
-        @param[in] gammaweights_    matrix of point weights where each row represents a point and each
-                                 column represents a class in the mixture.
+                                    to a single data point. It is an array_like, with 
+												shape (n, n_features).
+
+        @param[in] responsibilities Matrix of responsibilities with the rows representing the points
+                                    and the columns representing each class in the mixture.
+
+        @param[in] gammaweights_    Matrix of point weights where each row represents a point and each
+                                    column represents a class in the mixture.
         """
 
         n_samples, n_dim = X.shape
@@ -242,14 +245,15 @@ class SMM(sklearn.base.BaseEstimator):
     def fit(self, X, y=None):
         """
         @brief   Estimate model parameters with the expectation-maximization algorithm.
+
         @details A initialization step is performed before entering the em
                  algorithm. If you want to avoid this step, set the keyword
-              argument init_params to the empty string '' when creating the
-           SMM object. Likewise, if you would like just to do an
-                initialization, set n_iter=0.
+                 argument init_params to the empty string '' when creating the
+                 SMM object. Likewise, if you would like just to do an
+                 initialization, set n_iter=0.
 
         @param[in] X List of k_features-dimensional data points. Each row corresponds 
-                  to a single data point. It is an array_like, with shape (n, n_features).
+                     to a single data point. It is an array_like, with shape (n, n_features).
         """
 
         # Sanity check: assert that the input matrix is not 1D
@@ -387,8 +391,8 @@ class SMM(sklearn.base.BaseEstimator):
         """
         @brief Compute the log probability under the model.
 
-        @param[in] X  Array_like, shape (n_samples, n_features). List of n_features-dimensional data points. 
-                      Each row corresponds to a single data point.
+        @param[in] X  Array_like, shape (n_samples, n_features). List of n_features-dimensional data 
+		                points. Each row corresponds to a single data point.
 
         @returns prob Array_like, shape (n_samples,). Probabilities of each data point in X.
         """
@@ -398,7 +402,7 @@ class SMM(sklearn.base.BaseEstimator):
 
     def score_samples(self, X):
         """
-        @brief Per-sample likelihood of the data under the model.
+        @brief   Per-sample likelihood of the data under the model.
 
         @details Compute the probability of X under the model and return the posterior distribution 
                  (responsibilities) of each mixture component for each element of X.
@@ -406,10 +410,10 @@ class SMM(sklearn.base.BaseEstimator):
         @param[in] X array_like, shape (n_samples, n_features). List of n_features-dimensional data points. 
                      Each row corresponds to a single data point.
 
-        @returns a prob, responsibilities.
-         prob             : array_like, shape (n_samples,). Probability of each data point in X.
-                   responsibilities : array_like, shape (n_samples, n_components). Posterior probabilities of
-                                      each mixture component for each observation.
+        @returns a prob, responsibilities. 
+		           prob             : array_like, shape (n_samples,). Probability of each data point in X. 
+					  responsibilities : array_like, shape (n_samples, n_components). Posterior probabilities of
+                                    each mixture component for each observation.
         """
 
         sklearn.utils.validation.check_is_fitted(self, 'means_')
@@ -486,8 +490,8 @@ class SMM(sklearn.base.BaseEstimator):
         """
         @brief   Solves the equation to calculate the next value of v (degrees of freedom).
         @details This method is part of the maximisation step. It is used to calculate the next value
-                                for the degrees of freedom of each t-Student component. This method uses the
-                                information from the E-step as well as the number of dimensions (features) of a point.
+                 for the degrees of freedom of each t-Student component. This method uses the
+                 information from the E-step as well as the number of dimensions (features) of a point.
 
         @param[in] v_vector Degrees of freedoom of ALL the components of the mixture.
         @param[in] z        Matrix of responsibilities, each row represents a point and each column
@@ -555,22 +559,22 @@ class SMM(sklearn.base.BaseEstimator):
 
         @param[in] X         Array_like, shape (n_samples, n_features).
                              List of k_features-dimensional data points. Each row corresponds to a single 
-                                                                data point.
+                             data point.
 
         @param[in] zu        Array, shape (n_samples, n_components).
                              Contains the element-wise multiplication of the responsibilities by the gamma 
-                                                                weights.
+                             weights.
 
         @param[in] z_sum     Array, shape (n_components, )
                              Sum of all the responsibilities for each mixture.
 
         @param[in] means     Array_like, shape (n_components, n_features).
-                                                                List of n_features-dimensional mean vectors for n_components t-Students.
-                                                                Each row corresponds to a single mean vector.
+                             List of n_features-dimensional mean vectors for n_components t-Students.
+                             Each row corresponds to a single mean vector.
 
         @param[in] min_covar Float value.
-                             Minimum amount that will be added to the covariance matrix in case of trouble, 
-                                                                usually 1.e-6.
+                             Minimum amount that will be added to the covariance matrix in case of trouble,
+                             usually 1.e-6.
         """
 
         # Eq. 15 from K. Murphy, "Fitting a Conditional Linear Gaussian Distribution" adapted to the
@@ -595,22 +599,22 @@ class SMM(sklearn.base.BaseEstimator):
 
         @param[in] X         Array_like, shape (n_samples, n_features).
                              List of k_features-dimensional data points. Each row corresponds to a single 
-                                                                data point.
+                             data point.
 
         @param[in] zu        Array, shape (n_samples, n_components).
                              Contains the element-wise multiplication of the responsibilities by the gamma 
-                                                                weights.
+                             weights.
 
         @param[in] z_sum     Array, shape (n_components, )
                              Sum of all the responsibilities for each mixture.
 
         @param[in] means     Array_like, shape (n_components, n_features).
-                                                                List of n_features-dimensional mean vectors for n_components t-Students.
-                                                                Each row corresponds to a single mean vector.
+                             List of n_features-dimensional mean vectors for n_components t-Students.
+                             Each row corresponds to a single mean vector.
 
         @param[in] min_covar Float value.
-                             Minimum amount that will be added to the covariance matrix in case of trouble, 
-                                                                usually 1.e-7.
+                             Minimum amount that will be added to the covariance matrix in case of trouble,
+                             usually 1.e-7.
         """
 
         # Sanity checks for dimensionality
@@ -647,22 +651,22 @@ class SMM(sklearn.base.BaseEstimator):
 
         @param[in] X         Array_like, shape (n_samples, n_features).
                              List of k_features-dimensional data points. Each row corresponds to a single 
-                                                                data point.
+                             data point.
 
         @param[in] zu        Array, shape (n_samples, n_components).
                              Contains the element-wise multiplication of the responsibilities by the gamma 
-                                                                weights.
+                             weights.
 
         @param[in] z_sum     Array, shape (n_components, )
                              Sum of all the responsibilities for each mixture.
 
         @param[in] means     Array_like, shape (n_components, n_features).
-                                                                List of n_features-dimensional mean vectors for n_components t-Students.
-                                                                Each row corresponds to a single mean vector.
+                             List of n_features-dimensional mean vectors for n_components t-Students.
+                             Each row corresponds to a single mean vector.
 
         @param[in] min_covar Float value.
-                             Minimum amount that will be added to the covariance matrix in case of trouble, 
-                                                                usually 1.e-7.
+                             Minimum amount that will be added to the covariance matrix in case of trouble,
+                             usually 1.e-6.
         """
 
         avg_X2 = np.dot(zu.T, X * X)
@@ -678,21 +682,23 @@ class SMM(sklearn.base.BaseEstimator):
         @brief Multivariate t-Student PDF for a matrix of data points.
 
         @param[in] X         List of k_features-dimensional data points. Each row corresponds 
-                                                                to a single data point. It is an array_like, shape (n_samples, n_features).
+                             to a single data point. It is an array_like, shape (n_samples, n_features).
 
         @param[in] means     is an array_like, shape (n_components, n_features).
-                                                                List of n_features-dimensional mean vectors for n_components t-Students.
-                                                                Each row corresponds to a single mean vector.
+                             List of n_features-dimensional mean vectors for n_components t-Students.
+                             Each row corresponds to a single mean vector.
 
-        @param[in] covars    is an array_like list of n_components covariance parameters for each t-Student. 
-                                                                Shape (n_components, n_features).
+        @param[in] covars    is an array_like list of n_components covariance parameters for each 
+		                       t-Student. 
+                             Shape (n_components, n_features).
 
         @param[in] dfs       Degrees of freedom, shape (n_components, ).
 
         @param[in] min_covar Minimum amount that will be added to the covariance matrix in case of 
-                                                                trouble, usually 1.e-6.
+                             trouble, usually 1.e-6.
 
-        @returns the evaluation of the multivariate probability density function for a t-Student distribution.
+        @returns the evaluation of the multivariate probability density function for a t-Student 
+		           distribution.
         """
 
         # Sanity check: make sure that the shape of means and covariances is as expected for diagonal matrices
@@ -724,21 +730,23 @@ class SMM(sklearn.base.BaseEstimator):
         @brief Multivariate t-Student PDF for a matrix of data points.
 
         @param[in] X         List of k_features-dimensional data points. Each row corresponds 
-                                                                to a single data point. It is an array_like, shape (n_samples, n_features).
+                             to a single data point. It is an array_like, shape (n_samples, n_features).
 
         @param[in] means     is an array_like, shape (n_components, n_features).
-                                                                List of n_features-dimensional mean vectors for n_components t-Students.
-                                                                Each row corresponds to a single mean vector.
+                             List of n_features-dimensional mean vectors for n_components t-Students.
+                             Each row corresponds to a single mean vector.
 
-        @param[in] covars    is an array_like list of n_components covariance parameters for each t-Student. 
-                                                                Shape (n_components, n_features).
+        @param[in] covars    is an array_like list of n_components covariance parameters for each 
+		                       t-Student. 
+                             Shape (n_components, n_features).
 
         @param[in] dfs       Degrees of freedom, shape (n_components, ).
 
         @param[in] min_covar Minimum amount that will be added to the covariance matrix in case of 
-                                                                trouble, usually 1.e-6.
+                             trouble, usually 1.e-6.
 
-        @returns the evaluation of the multivariate probability density function for a t-Student distribution.
+        @returns the evaluation of the multivariate probability density function for a t-Student 
+		           distribution.
         """
 
         cv = covars.copy()
@@ -760,21 +768,23 @@ class SMM(sklearn.base.BaseEstimator):
         @brief Multivariate t-Student PDF for a matrix of data points.
 
         @param[in] X         List of k_features-dimensional data points. Each row corresponds 
-                                                                to a single data point. It is an array_like, shape (n_samples, n_features).
+                             to a single data point. It is an array_like, shape (n_samples, n_features).
 
         @param[in] means     is an array_like, shape (n_components, n_features).
-                                                                List of n_features-dimensional mean vectors for n_components t-Students.
-                                                                Each row corresponds to a single mean vector.
+                             List of n_features-dimensional mean vectors for n_components t-Students.
+                             Each row corresponds to a single mean vector.
 
-        @param[in] covars    is an array_like list of n_components covariance parameters for each t-Student. 
-                                                                Shape (n_features, n_features).
+        @param[in] covars    is an array_like list of n_components covariance parameters for each 
+		                       t-Student. 
+									  Shape (n_features, n_features).
 
         @param[in] dfs       Degrees of freedom, shape (n_components, ).
 
         @param[in] min_covar Minimum amount that will be added to the covariance matrix in case of 
-                                                                trouble, usually 1.e-6.
+                             trouble, usually 1.e-6.
 
-        @returns the evaluation of the multivariate probability density function for a t-Student distribution.
+        @returns the evaluation of the multivariate probability density function for a t-Student 
+		           distribution.
         """
 
         # Sanity check: make sure that the shape is (n_features, n_features) and that it matches the shape
@@ -828,31 +838,32 @@ class SMM(sklearn.base.BaseEstimator):
         """
         @brief   Calculates the PDF of the multivariate t-student for a group of samples.
         @details This method has a dictionary with the different types of covariance
-                                matrices and calls the appropriate PDF function depending on the type
-                                of covariance matrix that is passed as parameter.
-                                This method assumes that the covariance matrices are full if the
-                                parameter cov_type is not specified when calling.
+                 matrices and calls the appropriate PDF function depending on the type
+                 of covariance matrix that is passed as parameter.
+                 This method assumes that the covariance matrices are full if the
+                 parameter cov_type is not specified when calling.
 
         @param[in] X        is an array_like, shape (n_samples, n_features)
-                                                List of n_features-dimensional data points.  Each row corresponds to a
-                                                single data point.
+                            List of n_features-dimensional data points.  Each row corresponds to a
+                            single data point.
 
         @param[in] means    is an array_like, shape (n_components, n_features)
-                                                     List of n_features-dimensional mean vectors for n_components t-Students.
-                                                     Each row corresponds to a single mean vector.
+                            List of n_features-dimensional mean vectors for n_components t-Students.
+                            Each row corresponds to a single mean vector.
 
         @param[in] covars   is an array_like list of n_components covariance parameters for each t-Student. 
-                                                     The shape depends on `covariance_type`:
-                                                     (n_components, n_features)             if 'spherical',
-                                                          (n_features, n_features)               if 'tied',
-                                                          (n_components, n_features)             if 'diag',
-                                                          (n_components, n_features, n_features) if 'full'
+                            The shape depends on `covariance_type`:
+                            (n_components, n_features)             if 'spherical',
+                            (n_features, n_features)               if 'tied',
+                            (n_components, n_features)             if 'diag',
+                            (n_components, n_features, n_features) if 'full'
 
         @param[in] cov_type is a string that indicates the type of the covariance parameters.
-                                                          It must be one of 'spherical', 'tied', 'diag', 'full'.  Defaults to 'full'.
+                            It must be one of 'spherical', 'tied', 'diag', 'full'.  Defaults to 'full'.
 
         @returns an array_like, shape (n_samples, n_components) array containing the log probabilities 
-                                of each data point in X under each of the n_components multivariate t-Student distributions.
+                 of each data point in X under each of the n_components multivariate t-Student 
+					  distributions.
         """
 
         _multivariate_normal_density_dict = {
@@ -895,36 +906,40 @@ class SMM(sklearn.base.BaseEstimator):
     @staticmethod
     def _mahalanobis_distance_chol(X, mu, cov_chol):
         """
-        @brief Calculates the Mahalanobis distance between a matrix (set) of vectors (X) and another vector (mu).
+        @brief   Calculates the Mahalanobis distance between a matrix (set) of vectors (X) and another 
+		           vector (mu).
         @details The vectors must be organised by row in X, that is, the features are the columns.
 
-        @param[in] X               Matrix with a vector in each row.
-        @param[in] mu              Mean vector of a single distribution (no mixture).
-        @param[in] cov_chol        Cholesky decomposition (L, i.e. lower triangular) of the covariance 
-                                                                 (normalising) matrix in case that is a full matrix. 
-                                                                                The shape is (n_features, n_features).
+        @param[in] X        Matrix with a vector in each row.
+        @param[in] mu       Mean vector of a single distribution (no mixture).
+        @param[in] cov_chol Cholesky decomposition (L, i.e. lower triangular) of the covariance 
+                            (normalising) matrix in case that is a full matrix. 
+                            The shape is (n_features, n_features).
 
-        @returns a vector of distances, each row represents the distance from the vector in the same row of X and mu. 
+        @returns a vector of distances, each row represents the distance from the vector in the same row 
+		           of X and mu. 
         """
+
         z = scipy.linalg.solve_triangular(cov_chol, (X - mu).T, lower=True)
         return np.einsum('ij, ij->j', z, z)
 
     @staticmethod
     def _mahalanobis_distance_mix_diag(X, means, covars, min_covar):
         """
-        @brief Calculates the mahalanobis distance between a matrix of points and a mixture of distributions
-               when the covariance matrices are diagonal.
+        @brief Calculates the mahalanobis distance between a matrix of points and a mixture of 
+		         distributions when the covariance matrices are diagonal.
 
         @param[in] X      Matrix with a vector in each row.
         @param[in] means  is an array_like, shape (n_components, n_features)
-                                                        List of n_features-dimensional mean vectors for n_components t-Students.
-                                                        Each row corresponds to a single mean vector.
+                          List of n_features-dimensional mean vectors for n_components t-Students.
+                          Each row corresponds to a single mean vector.
         @param[in] covars is an array_like list of n_components covariance parameters for each t-Student. 
-                                                        The shape depends is (n_components, n_features).
+                          The shape depends is (n_components, n_features).
 
-        @returns The Mahalanobis distance from all the samples to all the component means, 
-                                shape (n_samples, n_components).
+        @returns the Mahalanobis distance from all the samples to all the component means, 
+                 shape (n_samples, n_components).
         """
+
         n_samples, n_dim = X.shape
         n_components = len(means)
         result = np.empty((n_samples, n_components))
@@ -941,20 +956,22 @@ class SMM(sklearn.base.BaseEstimator):
     @staticmethod
     def _mahalanobis_distance_mix_full(X, means, covars, min_covar):
         """
-        @brief Calculates the mahalanobis distance between a matrix of points and a mixture of distributions. 
+        @brief Calculates the mahalanobis distance between a matrix of points and a mixture of 
+		         distributions. 
 
         @param[in] X      Matrix with a vector in each row.
 
         @param[in] means  is an array_like, shape (n_components, n_features)
-                                                        List of n_features-dimensional mean vectors for n_components t-Students.
-                                                        Each row corresponds to a single mean vector.
+                          List of n_features-dimensional mean vectors for n_components t-Students.
+                          Each row corresponds to a single mean vector.
 
         @param[in] covars is an array_like list of n_components covariance parameters for each t-Student. 
-                                                        The shape is (n_components, n_features, n_features).
+                          The shape is (n_components, n_features, n_features).
 
-        @returns The Mahalanobis distance from all the samples to all the component means, 
-                                shape (n_samples, n_components).
+        @returns the Mahalanobis distance from all the samples to all the component means, 
+                 shape (n_samples, n_components).
         """
+
         n_samples, n_dim = X.shape
         n_components = len(means)
         result = np.empty((n_samples, n_components))
@@ -970,7 +987,7 @@ class SMM(sklearn.base.BaseEstimator):
 
     @staticmethod
     def _validate_covariances(covars, covariance_type, n_components):
-        """ @brief Do basic checks on matrix covariance sizes and values"""
+        """ @brief Do basic checks on matrix covariance sizes and values """
 
         if covariance_type == 'full':
             if len(covars.shape) != 3:
@@ -1015,7 +1032,7 @@ class SMM(sklearn.base.BaseEstimator):
 
         @param[in] tied_cv         Tied covariance that is going to be converted to other type.
         @param[in] covariance_type String that represents the type of the covariance parameters. 
-                                                                                Must be one of 'spherical', 'tied', 'diag', 'full'.
+                                   Must be one of 'spherical', 'tied', 'diag', 'full'.
         @param[in] n_components    Number of components in the mixture (integer value).
 
         @returns the tied covariance in the format specified by the user.
@@ -1080,7 +1097,7 @@ class SMM(sklearn.base.BaseEstimator):
 
     @property
     def n_components(self):
-        """@returns the number of distributions in the mixture"""
+        """ @returns the number of distributions in the mixture """
         return self._n_components
 
     @n_components.setter
@@ -1089,17 +1106,17 @@ class SMM(sklearn.base.BaseEstimator):
 
     @property
     def weights(self):
-        """@returns the weights of each component in the mixture"""
+        """ @returns the weights of each component in the mixture """
         return self.weights_
 
     @property
     def means(self):
-        """@returns the means of each component in the mixture"""
+        """ @returns the means of each component in the mixture """
         return self.means_
 
     @property
     def degrees(self):
-        """@returns the degrees of freedom of each component in the mixture"""
+        """ @returns the degrees of freedom of each component in the mixture """
         return self.degrees_
 
     @property
@@ -1108,10 +1125,10 @@ class SMM(sklearn.base.BaseEstimator):
         @brief Covariance parameters for each mixture component.
         @details The shape depends on the type of covariance matrix:
 
-                                (n_classes,  n_features)               if 'diag',
-                                (n_classes,  n_features, n_features)   if 'full'
-                                (n_classes,  n_features)               if 'spherical',
-                                (n_features, n_features)               if 'tied',
+                 (n_classes,  n_features)               if 'diag',
+                 (n_classes,  n_features, n_features)   if 'full'
+                 (n_classes,  n_features)               if 'spherical',
+                 (n_features, n_features)               if 'tied',
 
         @returns the covariance matrices for all the classes. 
         """
