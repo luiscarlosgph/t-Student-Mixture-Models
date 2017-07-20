@@ -57,6 +57,7 @@ def main():
 	print('==================================================')
 	print('t-Student mixture optimized vs real parameters:')
 	print('')
+	print('   Number of samples: '              + str(n_samples))
 	print('   Component[s] in the mixture: '    + str(n_components))
 	print('')
 	print('   Estimated mean[s]:\n'             + str(mix_t.means))
