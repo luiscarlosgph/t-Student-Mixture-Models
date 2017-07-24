@@ -51,6 +51,9 @@ def print_params(name, mix_t, n_components, means, covars, dfs, weights):
 
 class TestSMM(unittest.TestCase):
 
+    def test_sklearn_check_estimator(self):
+        sklearn.utils.estimator_checks.check_estimator(smm.SMM)
+
     def test_cholesky_cov_det(self):
         cv = np.array([[89, 3, 16], [3, 2, 1], [16, 1, 3]])
         min_covar = 1e-7
@@ -333,10 +336,6 @@ class TestSMM(unittest.TestCase):
             mix_t.weights_ = weights
             real_aic = mix_t.aic(obs)
             self.assertTrue(np.fabs(real_aic - estimated_aic) < aic_eps)
-
-    def test_sklearn_check_estimator(self):
-        sklearn.utils.estimator_checks.check_estimator(smm.SMM)
-
 
 if __name__ == '__main__':
     unittest.main()

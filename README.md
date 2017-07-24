@@ -7,10 +7,13 @@ Implementation of the paper: 'Robust mixture modelling using the t distribution'
 * nose v1.3.7
 
 # Usage
-Please see example in [src/example.py](src/example.py).
+See example in [src/example.py](src/example.py).
 
 # Tests
 Run [run_tests.sh](run_tests.sh).
+
+# Documentation
+See [doc/smm.html](doc/smm.html). 
 
 # Author
 Luis Carlos Garcia-Peraza Herrera (luis.herrera.14@ucl.ac.uk).
