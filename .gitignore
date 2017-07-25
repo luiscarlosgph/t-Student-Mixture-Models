@@ -6,3 +6,4 @@ build
 *.pyc
 htmlcov
 .DS_Store
+dist

@@ -38,8 +38,8 @@ python setup.py test
 Current coverage: 79%.
 To re-run the coverage test (Ubuntu Ubuntu 16.04.2 LTS):
 ```
-python3-coverage run ./setup.py test
-python3-coverage html
+python-coverage run ./setup.py test
+python-coverage html
 ```
 Then open 'htmlcov/index.html' and check the line 'src/smm/smm'.
 
