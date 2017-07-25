@@ -252,7 +252,7 @@ class SMM(sklearn.base.BaseEstimator):
                     self.degrees_, responsibilities, z_sum, 
                     gammaweights_, n_dim, self.tol, self.n_iter
                 )
-            except (FloatingPointError, e):
+            except FloatingPointError as e:
                 raise dofMaximizationError(e.message)
 
     def fit(self, X, y=None):
@@ -364,7 +364,7 @@ class SMM(sklearn.base.BaseEstimator):
                     self._maximisation_step(X, responsibilities, 
 						      gammaweights_
                     )
-                except (dofMaximizationError, e):
+                except dofMaximizationError as e:
                     print(
                         '[self._maximisation_step] Error in the ' \
                         + 'maximization step of the degrees of '  \
