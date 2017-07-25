@@ -28,7 +28,7 @@ def main():
 	max_covar = 100
 	max_df = 10
 	means = np.random.randint(max_mean, size = (n_components, n_dim)) 
-	vector_covars = np.random.randint(max_covar, size = (n_components, (n_dim + 1) * n_dim / 2))
+	vector_covars = np.random.randint(max_covar, size = (n_components, int((n_dim + 1) * n_dim / 2)))
 	covars = np.zeros((n_components, n_dim, n_dim))
 	for c in range(n_components):
 		covars[c][np.triu_indices(n_dim)] = vector_covars[c]

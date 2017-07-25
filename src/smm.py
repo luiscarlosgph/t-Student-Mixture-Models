@@ -117,23 +117,7 @@ class SMM(sklearn.base.BaseEstimator):
 
     def __init__(self, n_components=1, covariance_type='full', 
             random_state=None, tol=1e-6, min_covar=1e-6, n_iter=1000, 
-            n_init=None, params=None, init_params=None):
-
-        # Correct those parameters that are None
-        #if covariance_type is None:
-        #    covariance_type = 'full'
-        #if tol is None:
-        #    tol = 1e-6
-        #if min_covar is None:
-        #    min_covar = 1e-6
-        #if n_iter is None:
-        #    n_iter = 1000
-        if n_init is None:
-            n_init = 1
-        if params is None:
-            params = 'wmcd'
-        if init_params is None:
-            init_params = 'wmcd'
+            n_init=1, params='wmcd', init_params='wmcd'):
 
         # Store the parameters as class attributes
         self.n_components = n_components
@@ -216,8 +200,8 @@ class SMM(sklearn.base.BaseEstimator):
         mahalanobis_distance_mix_func = SMM._mahalanobis_funcs[
             self.covariance_type
         ]
-	vp = self.degrees_ + n_dim
-	maha_dist = mahalanobis_distance_mix_func(
+        vp = self.degrees_ + n_dim
+        maha_dist = mahalanobis_distance_mix_func(
             X, self.means_, self.covars_, self.min_covar
         )
         gammaweights_ = vp / (self.degrees_ + maha_dist)
@@ -249,7 +233,7 @@ class SMM(sklearn.base.BaseEstimator):
         # Update means
         if 'm' in self.params:
             dot_zu_x = np.dot(zu.T, X)
-	    zu_sum_ndarray = zu_sum.reshape(zu_sum.shape[0], 1)
+            zu_sum_ndarray = zu_sum.reshape(zu_sum.shape[0], 1)
             self.means_ = dot_zu_x / (zu_sum_ndarray + 10 * SMM._EPS)
 
         # Update covariances
@@ -268,7 +252,7 @@ class SMM(sklearn.base.BaseEstimator):
                     self.degrees_, responsibilities, z_sum, 
                     gammaweights_, n_dim, self.tol, self.n_iter
                 )
-            except FloatingPointError, e:
+            except (FloatingPointError, e):
                 raise dofMaximizationError(e.message)
 
     def fit(self, X, y=None):
@@ -344,7 +328,7 @@ class SMM(sklearn.base.BaseEstimator):
             current_log_likelihood = None
 
             # EM algorithm
-            for i in xrange(self.n_iter):
+            for i in range(self.n_iter):
                 prev_log_likelihood = current_log_likelihood
 
                 # Expectation step
@@ -380,7 +364,7 @@ class SMM(sklearn.base.BaseEstimator):
                     self._maximisation_step(X, responsibilities, 
 						      gammaweights_
                     )
-                except dofMaximizationError, e:
+                except (dofMaximizationError, e):
                     print(
                         '[self._maximisation_step] Error in the ' \
                         + 'maximization step of the degrees of '  \
@@ -434,7 +418,7 @@ class SMM(sklearn.base.BaseEstimator):
         """
 
         _, responsibilities, _ = self._expectation_step(X)
-	r_argmax = responsibilities.argmax(axis=1)
+        r_argmax = responsibilities.argmax(axis=1)
 
         return r_argmax
 
@@ -531,7 +515,7 @@ class SMM(sklearn.base.BaseEstimator):
         likelihoods = pr.sum(axis=1)
 
         # Update responsibilities
-	like_ndarray = likelihoods.reshape(likelihoods.shape[0], 1)
+        like_ndarray = likelihoods.reshape(likelihoods.shape[0], 1)
         responsibilities = pr / (like_ndarray + 10 * SMM._EPS)
 
         return likelihoods, responsibilities
