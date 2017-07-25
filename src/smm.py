@@ -293,7 +293,7 @@ class SMM(sklearn.base.BaseEstimator):
             )
 
         # For all the initialisations we get the one with the best 
-		  # parameters
+        # parameters
         n_samples, n_dim = X.shape
         max_prob = -np.infty
         for _ in range(self.n_init):
