@@ -116,18 +116,18 @@ class SMM(sklearn.base.BaseEstimator):
     """
 
     def __init__(self, n_components=1, covariance_type='full', 
-            random_state=None, tol=1e-6, min_covar=1e-6, n_iter=None, 
+            random_state=None, tol=1e-6, min_covar=1e-6, n_iter=1000, 
             n_init=None, params=None, init_params=None):
 
         # Correct those parameters that are None
-        if covariance_type is None:
-            covariance_type = 'full'
-        if tol is None:
-            tol = 1e-6
-        if min_covar is None:
-            min_covar = 1e-6
-        if n_iter is None:
-            n_iter = 1000
+        #if covariance_type is None:
+        #    covariance_type = 'full'
+        #if tol is None:
+        #    tol = 1e-6
+        #if min_covar is None:
+        #    min_covar = 1e-6
+        #if n_iter is None:
+        #    n_iter = 1000
         if n_init is None:
             n_init = 1
         if params is None:
@@ -1296,7 +1296,7 @@ class SMM(sklearn.base.BaseEstimator):
 				    X, mu, cov_chol
             )
         
-		  return result
+        return result
 
     @staticmethod
     def _mahalanobis_distance_mix_tied(X, means, covars, min_covar):
@@ -1322,7 +1322,7 @@ class SMM(sklearn.base.BaseEstimator):
         """
 
         cv = np.tile(covars, (means.shape[0], 1, 1))
-		  retval = SMM._mahalanobis_distance_mix_full(
+        retval = SMM._mahalanobis_distance_mix_full(
 		      X, means, cv, min_covar
         )
 
@@ -1330,7 +1330,7 @@ class SMM(sklearn.base.BaseEstimator):
 
     @staticmethod
     def _validate_covariances(covars, covariance_type, n_components):
-        """Do basic checks on matrix covariance sizes and values"""
+        """Do basic checks on matrix covariance sizes and values."""
 
         if covariance_type == 'full':
             if len(covars.shape) != 3:
@@ -1347,7 +1347,7 @@ class SMM(sklearn.base.BaseEstimator):
                 if (not np.allclose(cv, cv.T) 
 					         or np.any(linalg.eigvalsh(cv) <= 0)):
                     raise ValueError(
-                        "component %d of 'full' covars must be " \
+                        "component %d of 'full' covars must be "    \
 								+ "symmetric, positive-definite" % n
 						  )
                 else:
@@ -1364,37 +1364,55 @@ class SMM(sklearn.base.BaseEstimator):
                 raise ValueError("'diag' covars must be non-negative")
         elif covariance_type == 'spherical':
             if len(covars) != n_components:
-                raise ValueError("'spherical' covars have length " \
-					     + "n_components"
+                raise ValueError(
+                    "'spherical' covars have length n_components"
 					 )
             elif np.any(covars <= 0):
-                raise ValueError("'spherical' covars must be " \
-					     + "non-negative"
+                raise ValueError(
+					     "'spherical' covars must be non-negative"
                 )
         elif covariance_type == 'tied':
             if covars.shape[0] != covars.shape[1]:
                 raise ValueError(
                     "'tied' covars must have shape (n_dim, n_dim)")
-            elif (not np.allclose(covars, covars.T) or np.any(np.linalg.eigvalsh(covars) <= 0)):
+            elif (not np.allclose(covars, covars.T) 
+				        or np.any(np.linalg.eigvalsh(covars) <= 0)):
                 raise ValueError(
-                    "'tied' covars must be symmetric, positive-definite")
+                    "'tied' covars must be symmetric, " \
+						  + "positive-definite"
+                )
 
     @staticmethod
-    def dist_covar_to_match_cov_type(tied_cv, covariance_type, n_components):
-        """
-        @brief Create all the covariance matrices from a given template.
+    def dist_covar_to_match_cov_type(tied_cv, covariance_type, 
+	         n_components):
+        """Create all the covariance matrices from a given template.
+        
+		  Parameters
+		  ----------
+        tied_cv : array_like, shape (n_features, n_features).
+                  Tied covariance that is going to be converted to other
+						type.
 
-        @param[in] tied_cv         Tied covariance that is going to be converted to other type.
-        @param[in] covariance_type String that represents the type of the covariance parameters. 
-                                   Must be one of 'spherical', 'tied', 'diag', 'full'.
-        @param[in] n_components    Number of components in the mixture (integer value).
+        covariance_type : string.
+		                    Type of the covariance parameters. 
+                          Must be one of 'spherical', 'tied', 'diag', 
+								  'full'.
 
-        @returns the tied covariance in the format specified by the user.
+        n_components : integer value.
+		                 Number of components in the mixture. 
+        
+		  Returns
+		  -------
+        cv : array_like, shape (depends on the covariance_type 
+		       parameter). 
+				 Tied covariance in the format specified by the user.
         """
 
         if covariance_type == 'spherical':
-            cv = np.tile(tied_cv.mean() *
-                         np.ones(tied_cv.shape[1]), (n_components, 1))
+            cv = np.tile(
+				    tied_cv.mean() * np.ones(tied_cv.shape[1]), 
+				    (n_components, 1)
+				)
         elif covariance_type == 'tied':
             cv = tied_cv
         elif covariance_type == 'diag':
@@ -1402,39 +1420,62 @@ class SMM(sklearn.base.BaseEstimator):
         elif covariance_type == 'full':
             cv = np.tile(tied_cv, (n_components, 1, 1))
         else:
-            raise ValueError("covariance_type must be one of " +
-                             "'spherical', 'tied', 'diag', 'full'")
+            raise ValueError(
+				    "covariance_type must be one of " 
+                + "'spherical', 'tied', 'diag', 'full'"
+            )
         return cv
 
     @staticmethod
     def multivariate_t_rvs(m, S, df=np.inf, n=1):
-        """
-        @brief Generate multivariate random variable sample from a t-Student distribution.
-        @author Enzo Michelangeli
+        """Generate multivariate random variable sample from a t-Student
+		  distribution.
+        
+		  Author
+		  ------
+		  Original code by Enzo Michelangeli.
+        Modified by Luis C. Garcia-Peraza Herrera.
+		  This static method is exclusively used by 'tests/smm_test.py'.
 
         Parameters
         ----------
-        m : array_like, mean of random variable, length determines dimension of random variable.
+        m : array_like, shape (n_features,).
+		      Mean vector, its length determines the dimension of the 
+				random variable.
 
-        S : array_like, square array of covariance  matrix.
+        S : array_like, shape (n_features, n_features).
+		      Covariance matrix.
 
-        df : int or float, degrees of freedom.
+        df : int or float.
+             Degrees of freedom.
 
-        n : int, number of observations, return random array will be (n, len(m)).
+        n : int. 
+            Number of observations.
 
         Returns
         -------
-        rvs : ndarray, (n, len(m)), each row is an independent draw of a multivariate t distributed random 
-        variable
+        rvs : array_like, shape (n, len(m)). 
+		        Each row is an independent draw of a multivariate t 
+				  distributed random variable.
         """
+        
+		  # Sanity check: dimension of mean and covariance compatible
+        assert(len(m.shape) == 1)
+        assert(len(S.shape) == 2)
+        assert(m.shape[0] == S.shape[0])
+        assert(m.shape[0] == S.shape[1])
 
-        m = np.asarray(m)
-        d = len(m)
-        x = 1. if df == np.inf else np.random.chisquare(df, n) / df
+        # m = np.asarray(m)
+        d = m.shape[0]
+        # d = len(m)
+        if df == np.inf:
+            x = 1.0
+        else:
+            x = np.random.chisquare(df, n) / df
         z = np.random.multivariate_normal(np.zeros(d), S, (n,))
+        retval = m + z / np.sqrt(x)[:, None]
 
-        # same output format as random.multivariate_normal
-        return m + z / np.sqrt(x)[:, None]
+        return retval
 
     #@staticmethod
     # def sample(n_samples=1, n_pool=100):
@@ -1460,31 +1501,33 @@ class SMM(sklearn.base.BaseEstimator):
 
     @property
     def weights(self):
-        """ @returns the weights of each component in the mixture """
+        """Returns the weights of each component in the mixture."""
         return self.weights_
 
     @property
     def means(self):
-        """ @returns the means of each component in the mixture """
+        """Returns the means of each component in the mixture."""
         return self.means_
 
     @property
     def degrees(self):
-        """ @returns the degrees of freedom of each component in the mixture """
+        """Returns the degrees of freedom of each component in the 
+		  mixture."""
         return self.degrees_
 
     @property
     def covariances(self):
-        """
-        @brief Covariance parameters for each mixture component.
-        @details The shape depends on the type of covariance matrix:
+        """Covariance parameters for each mixture component.
 
-                 (n_classes,  n_features)               if 'diag',
-                 (n_classes,  n_features, n_features)   if 'full'
-                 (n_classes,  n_features)               if 'spherical',
-                 (n_features, n_features)               if 'tied',
+        Returns
+		  -------
+        The covariance matrices for all the classes. 
+        The shape depends on the type of covariance matrix:
 
-        @returns the covariance matrices for all the classes. 
+            (n_classes,  n_features)               if 'diag',
+            (n_classes,  n_features, n_features)   if 'full'
+            (n_classes,  n_features)               if 'spherical',
+            (n_features, n_features)               if 'tied',
         """
 
         if self.covariance_type == 'full':
