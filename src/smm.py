@@ -1461,28 +1461,6 @@ class SMM(sklearn.base.BaseEstimator):
 
         return retval
 
-    #@staticmethod
-    # def sample(n_samples=1, n_pool=100):
-    #	"""
-    #	@brief Generate a random sample from the distribution using rejection sampling.
-    #
-    #	@param[in] n_samples TODO
-    #
-    #	@param[in] n_pool    TODO
-    #
-    #	"""
-    #
-    # TODO
-
-    #@property
-    #def n_components(self):
-    #    """ @returns the number of distributions in the mixture """
-    #    return self.n_components
-
-    #@n_components.setter
-    #def n_components(self, n_components):
-    #    self.n_components = n_components
-
     @property
     def weights(self):
         """Returns the weights of each component in the mixture."""
