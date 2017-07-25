@@ -1501,14 +1501,6 @@ class SMM(sklearn.base.BaseEstimator):
         elif self.covariance_type == 'spherical':
             return [np.diag(cov) for cov in self.covars_]
 
-    # @brief Set the values for the covariance matrices.
-    # @param[in] covars New covariance matrices.
-    # @covariances.setter
-    # def covariances(self, covars, cov_type):
-    #	covars = np.asarray(covars)
-    #	_validate_covariances(covars, cov_type, self.n_components)
-    #	self.covars_ = covars
-
     # Class constants
     _covar_mstep_funcs = {
         'spherical': _covar_mstep_spherical.__func__,
