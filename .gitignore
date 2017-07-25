@@ -5,3 +5,4 @@ build
 .coverage
 *.pyc
 htmlcov
+.DS_Store
