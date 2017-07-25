@@ -12,7 +12,7 @@ SRC_FOLDER='src'
 
 # Script files
 PYTHON_SCRIPT='smm.py'
-TEST_SCRIPT='smm_test.py'
+TEST_SCRIPT='test_smm.py'
 
 # Create temporary test folder
 mkdir $TEMP_TEST_FOLDER

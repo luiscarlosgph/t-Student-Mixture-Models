@@ -24,6 +24,7 @@ import sklearn.utils
 import scipy.linalg
 import scipy.special
 import scipy.optimize
+import warnings
 
 
 class dofMaximizationError(ValueError):
@@ -116,7 +117,7 @@ class SMM(sklearn.base.BaseEstimator):
     """
 
     def __init__(self, n_components=1, covariance_type='full', 
-            random_state=None, tol=1e-6, min_covar=1e-6, n_iter=1000, 
+            random_state=None, tol=1e-6, min_covar=1e-6, n_iter=1000,
             n_init=1, params='wmcd', init_params='wmcd'):
 
         # Store the parameters as class attributes
@@ -254,6 +255,10 @@ class SMM(sklearn.base.BaseEstimator):
                 )
             except FloatingPointError as e:
                 raise dofMaximizationError(e.message)
+            except RuntimeError as e:
+                if e.message.startswith('Failed to converge after'):
+                    warnings.warn(e.message, RuntimeWarning)
+		    pass
 
     def fit(self, X, y=None):
         """Estimate model parameters with the EM algorithm.
@@ -323,7 +328,13 @@ class SMM(sklearn.base.BaseEstimator):
             if 'd' in self.init_params or not hasattr(self, 'degrees_'):
                 self.degrees_ = np.tile(1.0, self.n_components)
 
-            tol = self.tol
+            best_params = {
+                'weights': self.weights_,
+                'means': self.means_,
+                'covars': self.covars_,
+                'degrees': self.degrees_
+            }
+
             self.converged_ = False
             current_log_likelihood = None
 
@@ -355,7 +366,7 @@ class SMM(sklearn.base.BaseEstimator):
                     change = np.abs(current_log_likelihood -
                         prev_log_likelihood
                     )
-                    if change < tol:
+                    if change < self.tol:
                         self.converged_ = True
                         break
 
@@ -386,12 +397,11 @@ class SMM(sklearn.base.BaseEstimator):
         # Check the existence of an init param that was not subject to
         # likelihood computation issue
         if np.isneginf(max_prob) and self.n_iter:
-            raise RuntimeError(
-                'EM algorithm was never able to compute a valid ' \
-                + 'likelihood given initial parameters. Try ' \
-                + 'different init parameters (or increasing ' \
+            msg = 'EM algorithm was never able to compute a valid ' \
+                + 'likelihood given initial parameters. Try '       \
+                + 'different init parameters (or increasing '       \
                 + 'n_init) or check for degenerate data.'
-            )
+            warnings.warn(msg, RuntimeWarning)
 
         # Choosing the best result of all the iterations as the actual 
 		  # result
@@ -1500,7 +1510,7 @@ class SMM(sklearn.base.BaseEstimator):
             return [self.covars_] * self.n_components
         elif self.covariance_type == 'spherical':
             return [np.diag(cov) for cov in self.covars_]
-
+    
     # Class constants
     _covar_mstep_funcs = {
         'spherical': _covar_mstep_spherical.__func__,
