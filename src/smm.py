@@ -60,7 +60,7 @@ class SMM(sklearn.base.BaseEstimator):
 
     tol : float, optional.
           Convergence threshold. EM iterations will stop when 
-  		  average gain in log-likelihood is below this threshold.  
+          average gain in log-likelihood is below this threshold.  
           Defaults to 1e-6.
 
     min_covar : float, optional.
@@ -80,16 +80,16 @@ class SMM(sklearn.base.BaseEstimator):
     params : string, optional.
              Controls which parameters are updated in the training 
              process. Can contain any combination of 'w' for 
-  			  weights, 'm' for means, 'c' for covars, and 'd' for the
-  			  degrees of freedom.  
+             weights, 'm' for means, 'c' for covars, and 'd' for the
+             degrees of freedom.  
              Defaults to 'wmcd'.
 
     init_params : string, optional.
                   Controls which parameters are updated in the 
-  					 initialization process.  Can contain any 
-  					 combination of 'w' for weights, 'm' for means, 
-  					 'c' for covars, and 'd' for the degrees of 
-  					 freedom.  
+                  initialization process.  Can contain any 
+                  combination of 'w' for weights, 'm' for means, 
+                  'c' for covars, and 'd' for the degrees of 
+                  freedom.  
                   Defaults to 'wmcd'.
 
     Attributes
@@ -105,10 +105,10 @@ class SMM(sklearn.base.BaseEstimator):
               Covariance parameters for each mixture component. The 
               shape depends on `covariance_type`:
 
-              (n_components, n_features)             if 'spherical',
-              (n_features, n_features)               if 'tied',
-              (n_components, n_features)             if 'diag',
-              (n_components, n_features, n_features) if 'full'
+                  (n_components, n_features)             if 'spherical',
+                  (n_features, n_features)               if 'tied',
+                  (n_components, n_features)             if 'diag',
+                  (n_components, n_features, n_features) if 'full'
 
     converged_ : bool.
                  True when convergence was reached in fit(), False 
@@ -179,58 +179,60 @@ class SMM(sklearn.base.BaseEstimator):
             return np.array([]), np.empty((0, self.n_components))
         if X.shape[1] != self.means_.shape[1]:
             raise ValueError(
-				    '[SMM._expectation_step] Error, the ' \
-				    + 'shape of X is not compatible with self.'
-				)
+                '[SMM._expectation_step] Error, the ' \
+                + 'shape of X is not compatible with self.'
+            )
 
         # Initialisation of reponsibilities and weight of each point for
 		  # the Gamma distribution
         n_samples, n_dim = X.shape
         responsibilities = np.ndarray(
-            shape=(X.shape[0], self.n_components), dtype=np.float64)
+            shape=(X.shape[0], self.n_components), 
+	    dtype=np.float64
+	)
         gammaweights_ = np.ndarray(
-            shape=(X.shape[0], self.n_components), dtype=np.float64)
+            shape=(X.shape[0], self.n_components), 
+            dtype=np.float64
+	)
 
         # Calculate the probability of each point belonging to each 
 		  # t-Student distribution of the mixture
-        pr_before_weighting = self._multivariate_t_student_density(X, 
-		      self.means_, self.covars_, self.degrees_, 
-				self.covariance_type, self.min_covar)
+        pr_before_weighting = self._multivariate_t_student_density(
+            X, self.means_, self.covars_, self.degrees_, 
+            self.covariance_type, self.min_covar
+	)
         pr = pr_before_weighting * self.weights_
 
         # Calculate the likelihood of each point
         likelihoods = pr.sum(axis=1)
 
         # Update responsibilities
-        responsibilities = pr / (
-		     likelihoods.reshape(
-		        likelihoods.shape[0], 1
-           ) + 10 * SMM._EPS
+        responsibilities = \
+	    pr / (likelihoods.reshape(likelihoods.shape[0], 1) 
+            + 10 * SMM._EPS
         )
 
         # Update the Gamma weight for each observation
         mahalanobis_distance_mix_func = SMM._mahalanobis_funcs[
-		      self.covariance_type
+            self.covariance_type
         ]
-        gammaweights_ = (self.degrees_ + n_dim) / (
-		      self.degrees_ + mahalanobis_distance_mix_func(
-				    X, self.means_, self.covars_, self.min_covar
-			   )
-		  )
+	vp = self.degrees_ + n_dim
+	maha_dist = mahalanobis_distance_mix_func(
+            X, self.means_, self.covars_, self.min_covar
+        )
+        gammaweights_ = vp / (self.degrees_ + maha_dist)
 
         return likelihoods, responsibilities, gammaweights_
 
     def _maximisation_step(self, X, responsibilities, gammaweights_):
         """Perform the maximisation step of the EM algorithm.
         
-		  Parameters
-		  ----------
+        Parameters
+        ----------
         X : array_like, shape (n_samples, n_features).              
-		      List of k_features-dimensional data points. Each row 
-		      corresponds to a single data point.
+            Each row corresponds to a single data point.
 
-        responsibilities : array_like, shape (n_samples, 
-                           n_components). 
+        responsibilities : array_like, shape (n_samples, n_components). 
 
         gammaweights_ : array_like, shape (n_samples, n_components).
         """
@@ -246,14 +248,14 @@ class SMM(sklearn.base.BaseEstimator):
 
         # Update means
         if 'm' in self.params:
-            self.means_ = np.dot(
-                zu.T, X) / (zu_sum.reshape(zu_sum.shape[0], 1) + \
-					     10 * SMM._EPS)
+            dot_zu_x = np.dot(zu.T, X)
+	    zu_sum_ndarray = zu_sum.reshape(zu_sum.shape[0], 1)
+            self.means_ = dot_zu_x / (zu_sum_ndarray + 10 * SMM._EPS)
 
         # Update covariances
         if 'c' in self.params:
             covar_mstep_func = SMM._covar_mstep_funcs[
-				    self.covariance_type
+                self.covariance_type
             ]
             self.covars_ = covar_mstep_func(
                 X, zu, z_sum, self.means_, self.min_covar
@@ -264,7 +266,7 @@ class SMM(sklearn.base.BaseEstimator):
             try:
                 self.degrees_ = SMM._solve_dof_equation(
                     self.degrees_, responsibilities, z_sum, 
-						  gammaweights_, n_dim, self.tol, self.n_iter
+                    gammaweights_, n_dim, self.tol, self.n_iter
                 )
             except FloatingPointError, e:
                 raise dofMaximizationError(e.message)
@@ -275,33 +277,33 @@ class SMM(sklearn.base.BaseEstimator):
         A initialization step is performed before entering the em
         algorithm. If you want to avoid this step, set the keyword
         argument init_params to the empty string '' when creating 
-		  the SMM object. Likewise, if you would like just to do an
+        the SMM object. Likewise, if you would like just to do an
         initialization, set n_iter=0.
 
-		  Parameters
-		  ----------
+        Parameters
+        ----------
         X : array_like, shape (n_samples, n_features).
 
-		  y : not used, just for compatibility with sklearn API.
+        y : not used, just for compatibility with sklearn API.
         """
 
         # Sanity check: assert that the input matrix is not 1D
         if (len(X.shape) == 1):
             raise ValueError(
                 '[SMM.fit] Error, the input matrix must have a ' \
-					 + 'shape of (n_samples, n_features).'
+                + 'shape of (n_samples, n_features).'
             )
 
         # Sanity checks:
         #    - Convert input to 2d array, raise error on sparse 
-		  #      matrices. Calls assert_all_finite by default.
+        #      matrices. Calls assert_all_finite by default.
         #    - No. of samples is higher or equal to the no. of 
-		  #      components in the mixture.
+        #      components in the mixture.
         X = sklearn.utils.validation.check_array(X, dtype=np.float64)
         if X.shape[0] < self.n_components:
             raise ValueError(
-				    '[SMM.fit] Error, SMM estimation with ' \
-				    + '%s components, but got only %s samples' % (
+                '[SMM.fit] Error, SMM estimation with ' \
+                + '%s components, but got only %s samples' % (
                     self.n_components, X.shape[0]
                 )
             )
@@ -315,9 +317,9 @@ class SMM(sklearn.base.BaseEstimator):
             # EM initialisation
             if 'm' in self.init_params or not hasattr(self, 'means_'):
                 kmeans = sklearn.cluster.KMeans(
-					     n_clusters=self.n_components, 
-						  init='k-means++', 
-						  random_state=self.random_state
+                    n_clusters=self.n_components, 
+                    init='k-means++', 
+                    random_state=self.random_state
                 )
                 self.means_ = kmeans.fit(X).cluster_centers_
 
@@ -350,7 +352,7 @@ class SMM(sklearn.base.BaseEstimator):
                     self._expectation_step(X)
 
                 # Sanity check: assert that the likelihoods, 
-					 # responsibilities and gammaweights have the correct
+                # responsibilities and gammaweights have the correct
                 # dimensions
                 assert(len(likelihoods.shape) == 1)
                 assert(likelihoods.shape[0] == n_samples)
@@ -380,8 +382,8 @@ class SMM(sklearn.base.BaseEstimator):
                     )
                 except dofMaximizationError, e:
                     print(
-						      '[self._maximisation_step] Error in the ' \
-						      + 'maximization step of the degrees of ' \
+                        '[self._maximisation_step] Error in the ' \
+                        + 'maximization step of the degrees of '  \
                         + 'freedom: ' + e.message
                     )
                     break
@@ -402,9 +404,9 @@ class SMM(sklearn.base.BaseEstimator):
         if np.isneginf(max_prob) and self.n_iter:
             raise RuntimeError(
                 'EM algorithm was never able to compute a valid ' \
-					 + 'likelihood given initial parameters. Try ' \
-					 + 'different init parameters (or increasing ' \
-					 + 'n_init) or check for degenerate data.'
+                + 'likelihood given initial parameters. Try ' \
+                + 'different init parameters (or increasing ' \
+                + 'n_init) or check for degenerate data.'
             )
 
         # Choosing the best result of all the iterations as the actual 
@@ -419,35 +421,36 @@ class SMM(sklearn.base.BaseEstimator):
     def predict(self, X):
         """Predict label for data.
 
-		  This function will tell you which component of the mixture
-		  most likely generated the sample.
+        This function will tell you which component of the mixture
+        most likely generated the sample.
 
         Parameters
-		  ----------
+        ----------
         X : array-like, shape (n_samples, n_features).
 
         Returns
-		  -------
-		  array_like, shape (n_samples,). 
+        -------
+        r_argmax : array_like, shape (n_samples,). 
         """
 
         _, responsibilities, _ = self._expectation_step(X)
+	r_argmax = responsibilities.argmax(axis=1)
 
-        return responsibilities.argmax(axis=1)
+        return r_argmax
 
     def predict_proba(self, X):
         """Predict label for data.
 
-		  This function will tell the probability of each component
-		  generating each sample.
+        This function will tell the probability of each component
+        generating each sample.
 
         Parameters
-		  ----------
-		  X : array-like, shape (n_samples, n_features).
+        ----------
+        X : array-like, shape (n_samples, n_features).
 
         Returns
-		  -------
-		  array_like, shape (n_samples, n_components).
+        -------
+        responsibilities : array_like, shape (n_samples, n_components).
         """
 
         _, responsibilities, _ = self._expectation_step(X)
@@ -458,11 +461,11 @@ class SMM(sklearn.base.BaseEstimator):
         """Compute the log probability under the model.
 
         Parameters
-		  ----------
+        ----------
         X : array_like, shape (n_samples, n_features). 
 
-		  Returns
-		  -------
+        Returns
+        -------
         prob : array_like, shape (n_samples,). 
                Probabilities of each data point in X.
         """
@@ -475,23 +478,23 @@ class SMM(sklearn.base.BaseEstimator):
         """Per-sample likelihood of the data under the model.
 
         Compute the probability of X under the model and return the 
-		  posterior distribution (responsibilities) of each mixture 
-		  component for each element of X.
+        posterior distribution (responsibilities) of each mixture 
+        component for each element of X.
 
         Parameters
-		  ----------
-		  X : array_like, shape (n_samples, n_features). 
+        ----------
+        X : array_like, shape (n_samples, n_features). 
 
         Returns
-		  -------
-		  prob : array_like, shape (n_samples,). 
-		         Unnormalised probability of each data point in X, 
-		  		 i.e. likelihoods. 
+        -------
+        prob : array_like, shape (n_samples,). 
+               Unnormalised probability of each data point in X, 
+               i.e. likelihoods. 
 
         responsibilities : array_like, shape (n_samples, 
-		                     n_components). 
+                           n_components). 
                            Posterior probabilities of each mixture 
-		  						 component for each observation.
+                           component for each observation.
         """
 
         sklearn.utils.validation.check_is_fitted(self, 'means_')
@@ -504,7 +507,7 @@ class SMM(sklearn.base.BaseEstimator):
         if X.shape[1] != self.means_.shape[1]:
             raise ValueError(
                 '[score_samples] ValueError, the shape of X is not ' \
-					 + 'compatible with self.'
+                + 'compatible with self.'
             )
 
         # Initialisation of reponsibilities and weight of each point for
@@ -512,28 +515,24 @@ class SMM(sklearn.base.BaseEstimator):
         n_samples, n_dim = X.shape
         responsibilities = np.ndarray(
             shape=(X.shape[0], self.n_components), dtype=np.float64
-			)
+        )
         gammaweights_ = np.ndarray(
             shape=(X.shape[0], self.n_components), dtype=np.float64
-			)
+        )
 
         # Calculate the probability of each point belonging to each 
 		  # t-Student distribution of the mixture
         pr = self._multivariate_t_student_density(
-		      X, self.means_, self.covars_, self.degrees_,
+            X, self.means_, self.covars_, self.degrees_,
             self.covariance_type, self.min_covar
-			) * self.weights_
+        ) * self.weights_
 
         # Calculate the likelihood of each point
         likelihoods = pr.sum(axis=1)
 
         # Update responsibilities
-        responsibilities = \
-		      pr / (
-				    likelihoods.reshape(
-					     likelihoods.shape[0], 1
-                ) + 10 * SMM._EPS
-				)
+	like_ndarray = likelihoods.reshape(likelihoods.shape[0], 1)
+        responsibilities = pr / (like_ndarray + 10 * SMM._EPS)
 
         return likelihoods, responsibilities
 
@@ -544,8 +543,8 @@ class SMM(sklearn.base.BaseEstimator):
 
         if self.covariance_type == 'full':
             cov_params = self.n_components \
-				    * n_features               \
-					 * (n_features + 1) / 2.0
+            * n_features                   \
+            * (n_features + 1) / 2.0
         elif self.covariance_type == 'diag':
             cov_params = self.n_components * n_features
         elif self.covariance_type == 'tied':
@@ -556,8 +555,8 @@ class SMM(sklearn.base.BaseEstimator):
         mean_params = n_features * self.n_components
         df_params = self.n_components
         total_param = int(
-		      cov_params           \
-		      + mean_params        \
+            cov_params           \
+            + mean_params        \
             + df_params          \
             + self.n_components  \
             - 1
@@ -567,14 +566,14 @@ class SMM(sklearn.base.BaseEstimator):
 
     def bic(self, X):
         """Bayesian information criterion for the current model fit 
-		  and the proposed data.
+        and the proposed data.
 
         Parameters
-		  ----------
+        ----------
         X : array_like, shape (n_samples, n_features).
         
-		  Returns
-		  -------
+        Returns
+        -------
         A float (the lower the better).
         """
 
@@ -585,14 +584,14 @@ class SMM(sklearn.base.BaseEstimator):
 
     def aic(self, X):
         """Akaike information criterion for the current model fit 
-		  and the proposed data.
+        and the proposed data.
 
         Parameters
-		  ----------
+        ----------
         X : array_like, shape (n_samples, n_features).
 
         Returns
-		  -------
+        -------
         A float (the lower the better).
         """
 
@@ -636,52 +635,55 @@ class SMM(sklearn.base.BaseEstimator):
         -------
         new_v_vector : array_like (n_components,).
                        Vector with the updated degrees of freedom for 
-							  each component in the mixture.
+                       each component in the mixture.
         """
 
         # Sanity check: check that the dimensionality of the vector of 
-		  # degrees of freedom is correct
+        # degrees of freedom is correct
         assert(len(v_vector.shape) == 1)
         n_components = v_vector.shape[0]
 
         # Sanity check: the matrix of responsibilities should be 
-		  # (n_samples x n_components)
+        # (n_samples x n_components)
         assert(len(z.shape) == 2)
         assert(z.shape[1] == n_components)
 
         # Sanity check: the top-to-bottom sum of the responsibilities 
-		  # must have a shape (n_components, )
+        # must have a shape (n_components, )
         assert(len(z_sum.shape) == 1)
         assert(z_sum.shape[0] == n_components)
 
         # Sanity check: gamma weights matrix must have the same 
-		  # dimensionality as the responsibilities
+        # dimensionality as the responsibilities
         assert(u.shape == z.shape)
 
         # Initialisation
         new_v_vector = np.empty_like(v_vector)
 
         # Calculate the constant part of the equation to calculate the 
-		  # new degrees of freedom
+        # new degrees of freedom
         vdim = (v_vector + n_dim) / 2.0
         zlogu_sum = np.sum(z * (np.log(u) - u), axis=0)
-        constant_part = 1.0 + zlogu_sum / z_sum + \
-            scipy.special.digamma(vdim) - np.log(vdim)
+        constant_part = 1.0               \
+            + zlogu_sum / z_sum           \
+            + scipy.special.digamma(vdim) \
+            - np.log(vdim)
 
         # Solve the equation numerically using Newton-Raphson for each 
-		  # component of the mixture
+        # component of the mixture
         for c in range(n_components):
-            def func(x): return np.log(x / 2.0) - \
-                scipy.special.digamma(x / 2.0) + constant_part[c]
+            def func(x): return np.log(x / 2.0)  \
+                - scipy.special.digamma(x / 2.0) \
+                + constant_part[c]
 
-            def fprime(x): return 1.0 / x - \
-                scipy.special.polygamma(1, x / 2.0) / 2.0
+            def fprime(x): return 1.0 / x \
+                - scipy.special.polygamma(1, x / 2.0) / 2.0
 
-            def fprime2(x): return - 1.0 / (x * x) - \
-                scipy.special.polygamma(2, x / 2.0) / 4.0
+            def fprime2(x): return - 1.0 / (x * x) \
+                - scipy.special.polygamma(2, x / 2.0) / 4.0
             new_v_vector[c] = scipy.optimize.newton(
-				    func, v_vector[c], fprime, args=(), tol=tol, 
-					 maxiter=n_iter, fprime2=fprime2
+                func, v_vector[c], fprime, args=(), tol=tol, 
+                maxiter=n_iter, fprime2=fprime2
             )
             if new_v_vector[c] < 0.0:
                 raise ValueError('[_solve_dof_equation] Error, ' \
@@ -736,16 +738,16 @@ class SMM(sklearn.base.BaseEstimator):
                     covariance matrix in case of trouble, usually 
                     1.e-6.
         
-		  Returns
-		  -------
+        Returns
+        -------
         retval : array_like, shape (n_components, n_features).
         """
 
         # Eq. 15 from K. Murphy, "Fitting a Conditional Linear Gaussian 
-		  # Distribution" adapted to the mixture of t-students (i.e. 
-		  # responsibilities matrix is multiplied element-wise by the 
-		  # gamma weights matrix. See that zu.T is used in the calculation
-		  # of weighted_X_sum)
+        # Distribution" adapted to the mixture of t-students (i.e. 
+        # responsibilities matrix is multiplied element-wise by the 
+        # gamma weights matrix. See that zu.T is used in the calculation
+        # of weighted_X_sum)
         norm = np.float64(1) / (z_sum[:, np.newaxis] + 10 * SMM._EPS)
         weighted_X_sum = np.dot(zu.T, X)
         avg_X2 = np.dot(zu.T, X * X) * norm
@@ -813,7 +815,7 @@ class SMM(sklearn.base.BaseEstimator):
                 # Underflow Errors in doing post * X.T are not important
                 if n_components == 1:
                     avg_cv = np.dot(post * diff.T, diff) \
-						      / (zu_sum[c] + 10 * SMM._EPS)
+                        / (zu_sum[c] + 10 * SMM._EPS)
                 else:
                     avg_cv = np.dot(post * diff.T, diff) \
                         / (z_sum[c] + 10 * SMM._EPS)
@@ -845,11 +847,11 @@ class SMM(sklearn.base.BaseEstimator):
 
         min_covar : float value.
                     Minimum amount that will be added to the covariance 
-						  matrix in case of trouble, usually 1.e-6.
+                    matrix in case of trouble, usually 1.e-6.
 
         Returns
         -------
-        output : array_like, shape (n_features, n_features).
+        out : array_like, shape (n_features, n_features).
         """
 
         avg_X2 = np.dot(zu.T, X * X)
@@ -857,38 +859,36 @@ class SMM(sklearn.base.BaseEstimator):
         out = avg_X2 - avg_means2
         out /= z_sum.sum()
         out.flat[::len(out) + 1] += min_covar
+
         return out
 
     @staticmethod
     def _multivariate_t_student_density_diag(X, means, covars, dfs,
 	         min_covar):
         """Multivariate t-Student PDF for a matrix of data points and
-		  diagonal covariance matrices.
+        diagonal covariance matrices.
 
         Parameters
-		  ----------
+        ----------
         X : array_like, shape (n_samples, n_features). 
-		      Each row corresponds to a single data point. 
+            Each row corresponds to a single data point. 
 
         means : array_like, shape (n_components, n_features).
-                List of n_features-dimensional mean vectors for 
-					 n_components t-Students.
                 Each row corresponds to a single mean vector.
 
         covars : array_like, shape (n_components, n_features). 
-		           List of n_components covariance parameters for each 
+                 List of n_components covariance parameters for each 
                  t-Student. 
 
         dfs : array_like, shape (n_components,).
               Degrees of freedom.
 
         min_covar : float value.
-		              Minimum amount that will be added to the covariance 
-						  matrix in case of 
-                    trouble, usually 1.e-6.
+                    Minimum amount that will be added to the covariance 
+                    matrix in case of trouble, usually 1.e-6.
 
         Returns
-		  -------
+        -------
         retval : array_like, shape (n_samples, n_components). 
                  Evaluation of the multivariate probability density 
                  function for a t-Student distribution.
@@ -916,20 +916,20 @@ class SMM(sklearn.base.BaseEstimator):
         # Calculate the value of the denominator
         braces = 1.0 + maha / dfs
         denom = np.power(np.pi * dfs, n_dim / 2.0) \
-		      * scipy.special.gamma(dfs / 2.0)       \
-				* np.sqrt(det_covars)                  \
-				* np.power(braces, (dfs + n_dim) / 2.0)
+            * scipy.special.gamma(dfs / 2.0)       \
+            * np.sqrt(det_covars)                  \
+            * np.power(braces, (dfs + n_dim) / 2.0)
         retval = num / denom
 
         return retval 
 
     @staticmethod
     def _multivariate_t_student_density_spherical(X, means, covars, dfs,
-	         min_covar):
+            min_covar):
         """Multivariate t-Student PDF for a matrix of data points.
 
         Parameters
-		  ----------
+        ----------
         X : array_like, shape (n_samples, n_features). 
             Each row corresponds to a single data point.
 
@@ -938,19 +938,20 @@ class SMM(sklearn.base.BaseEstimator):
                 Each row corresponds to a single mean vector.
 
         covars : array_like, shape (n_components, n_features). 
-		           Covariance parameters for each t-Student. 
+                 Covariance parameters for each t-Student. 
 
         dfs : array_like, shape (n_components,).
-		        Degrees of freedom.
+              Degrees of freedom.
 
         min_covar : float value.
-		              Minimum amount that will be added to the covariance 
-						  matrix in case of trouble, usually 1.e-6.
+                    Minimum amount that will be added to the covariance 
+                    matrix in case of trouble, usually 1.e-6.
+
         Returns
         -------
         retval : array_like, shape (n_samples, n_components).
-		           Evaluation of the multivariate probability density 
-					  function for a t-Student distribution.
+                 Evaluation of the multivariate probability density 
+                 function for a t-Student distribution.
         """
 
         cv = covars.copy()
@@ -960,11 +961,11 @@ class SMM(sklearn.base.BaseEstimator):
             cv = np.tile(cv, (1, X.shape[-1]))
 
         # Sanity check: make sure that the covariance is spherical, 
-		  # i.e. all the elements of the diagonal must be equal
+        # i.e. all the elements of the diagonal must be equal
         for k in range(cv.shape[0]):
             assert(np.unique(cv[k]).shape[0] == 1)
         retval = SMM._multivariate_t_student_density_diag(
-		      X, means, cv, dfs, min_covar
+            X, means, cv, dfs, min_covar
         )
 
         return retval
@@ -975,7 +976,7 @@ class SMM(sklearn.base.BaseEstimator):
         """Multivariate t-Student PDF for a matrix of data points.
 
         Parameters
-		  ----------
+        ----------
         X : array_like, shape (n_samples, n_features). 
             Each row corresponds to a single data point.
 
@@ -984,24 +985,25 @@ class SMM(sklearn.base.BaseEstimator):
                 Each row corresponds to a single mean vector.
 
         covars : array_like, shape (n_features, n_features). 
-		           Covariance parameters for each t-Student. 
+                 Covariance parameters for each t-Student. 
 
         dfs : array_like, shape (n_components,).
-		        Degrees of freedom.
+              Degrees of freedom.
 
         min_covar : float value.
-		              Minimum amount that will be added to the covariance 
-						  matrix in case of trouble, usually 1.e-6.
+                    Minimum amount that will be added to the covariance 
+                    matrix in case of trouble, usually 1.e-6.
+
         Returns
         -------
         retval : array_like, shape (n_samples, n_components).
-		           Evaluation of the multivariate probability density 
-					  function for a t-Student distribution.
+                 Evaluation of the multivariate probability density 
+                 function for a t-Student distribution.
         """
 
         # Sanity check: make sure that the shape is (n_features, 
-		  # n_features) and that it matches the shape of the vector of 
-		  # means
+        # n_features) and that it matches the shape of the vector of 
+        # means
         assert(len(covars.shape) == 2)
         assert(covars.shape[0] == covars.shape[1])
         assert(means.shape[1] == covars.shape[0])
@@ -1019,7 +1021,7 @@ class SMM(sklearn.base.BaseEstimator):
         """Multivariate t-Student PDF for a matrix of data points.
 
         Parameters
-		  ----------
+        ----------
         X : array_like, shape (n_samples, n_features). 
             Each row corresponds to a single data point.
 
@@ -1028,15 +1030,16 @@ class SMM(sklearn.base.BaseEstimator):
                 Each row corresponds to a single mean vector.
 
         covars : array_like, shape (n_components, n_features, 
-		           n_features). 
-		           Covariance parameters for each t-Student. 
+                 n_features). 
+                 Covariance parameters for each t-Student. 
 
         dfs : array_like, shape (n_components,).
-		        Degrees of freedom.
+              Degrees of freedom.
 
         min_covar : float value.
-		              Minimum amount that will be added to the covariance 
-						  matrix in case of trouble, usually 1.e-6.
+                    Minimum amount that will be added to the covariance 
+                    matrix in case of trouble, usually 1.e-6.
+
         Returns
         -------
         prob : array_like, shape (n_samples, n_components).
@@ -1049,17 +1052,17 @@ class SMM(sklearn.base.BaseEstimator):
         prob = np.empty((n_samples, n_components))
 
         # Sanity check: assert that the received means and covars have 
-		  # the right shape
+        # the right shape
         assert(means.shape[0] == n_components)
         assert(covars.shape[0] == n_components)
         assert(dfs.shape[0] == n_components)
 
         # We evaluate all the saples for each component 'c' in the 
-		  # mixture
+        # mixture
         for c, (mu, cv, df) in enumerate(zip(means, covars, dfs)):
 
             # Calculate the Cholesky decomposition of the covariance 
-				# matrix
+            # matrix
             cov_chol = SMM._cholesky(cv, min_covar)
 
             # Calculate the determinant of the covariance matrix
@@ -1072,17 +1075,17 @@ class SMM(sklearn.base.BaseEstimator):
             # Calculate the coefficient of the gamma functions
             r = np.asarray(df, dtype=np.float64)
             gamma_coef = np.exp(
-				    scipy.special.gammaln((r + n_dim) / 2.0) \
-					 - scipy.special.gammaln(r / 2.0)
+                scipy.special.gammaln((r + n_dim) / 2.0) \
+                - scipy.special.gammaln(r / 2.0)
             )
 
             # Calculate the denominator of the multivariate t-Student
             denom = np.sqrt(cov_det)                \
                 * np.power(np.pi * df, n_dim / 2.0) \
-					 * np.power((1 + maha / df), (df + n_dim) / 2)
+                * np.power((1 + maha / df), (df + n_dim) / 2)
 
             # Finally calculate the PDF of the class 'c' for all the X 
-				# samples
+            # samples
             prob[:, c] = gamma_coef / denom
 
         return prob
@@ -1091,17 +1094,17 @@ class SMM(sklearn.base.BaseEstimator):
     def _multivariate_t_student_density(X, means, covars, dfs, cov_type,
 	         min_covar):
         """Calculates the PDF of the multivariate t-student for a group 
-		  of samples.
+        of samples.
 
         This method has a dictionary with the different types of 
-		  covariance matrices and calls the appropriate PDF function 
-		  depending on the type of covariance matrix that is passed as 
-		  parameter.
+        covariance matrices and calls the appropriate PDF function 
+        depending on the type of covariance matrix that is passed as 
+        parameter.
         This method assumes that the covariance matrices are full if the
         parameter cov_type is not specified when calling.
         
-		  Parameters
-		  ----------
+        Parameters
+        ----------
         X : array_like, shape (n_samples, n_features).
             Each row corresponds to a single data point.
 
@@ -1112,23 +1115,23 @@ class SMM(sklearn.base.BaseEstimator):
         covars : array_like, covariance parameters for each t-Student. 
                  The shape depends on `covariance_type`:
                  
-					  (n_components, n_features)             if 'spherical',
+                 (n_components, n_features)             if 'spherical',
                  (n_features, n_features)               if 'tied',
                  (n_components, n_features)             if 'diag',
                  (n_components, n_features, n_features) if 'full'
 
         cov_type : string.
-		             Indicates the type of the covariance parameters.
+                   Indicates the type of the covariance parameters.
                    It must be one of 'spherical', 'tied', 'diag', 
-						 'full'.  
-						 Defaults to 'full'.
+                   'full'.  
+                   Defaults to 'full'.
 
         Returns
-		  -------
+        -------
         retval : array_like, shape (n_samples, n_components).
-		           Array containing the probabilities of each data point 
-					  in X under each of the n_components multivariate 
-					  t-Student distributions.
+                 Array containing the probabilities of each data point 
+                 in X under each of the n_components multivariate 
+                 t-Student distributions.
         """
 
         _multivariate_normal_density_dict = {
@@ -1146,22 +1149,22 @@ class SMM(sklearn.base.BaseEstimator):
     @staticmethod
     def _cholesky(cv, min_covar):
         """Calculates the lower triangular Cholesky decomposition of a 
-		  covariance matrix.
+        covariance matrix.
         
-		  Parameters
-		  ----------
+        Parameters
+        ----------
         covar : array_like, shape (n_features, n_features).
-		          Covariance matrix whose Cholesky decomposition wants to 
-					 be calculated.
+                Covariance matrix whose Cholesky decomposition wants to 
+                be calculated.
 
         min_covar : float value.
-		              Minimum amount that will be added to the covariance 
-						  matrix in case of trouble, usually 1.e-6.
+                    Minimum amount that will be added to the covariance 
+                    matrix in case of trouble, usually 1.e-6.
 
         Returns
-		  -------
+        -------
         cov_chol : array_like, shape (n_features, n_features).
-		             Lower Cholesky decomposition of a covariance matrix.
+                   Lower Cholesky decomposition of a covariance matrix.
         """
 
         # Sanity check: assert that the covariance matrix is squared
@@ -1170,8 +1173,8 @@ class SMM(sklearn.base.BaseEstimator):
         # Sanity check: assert that the covariance matrix is symmetric
         if (cv.transpose() - cv).sum() > min_covar:
             print('[SMM._cholesky] Error, covariance matrix not ' \
-				    + 'symmetric: ' 
-					 + str(cv)
+                + 'symmetric: ' 
+                + str(cv)
             )
 
         n_dim = cv.shape[0]
@@ -1181,8 +1184,7 @@ class SMM(sklearn.base.BaseEstimator):
             # The model is most probably stuck in a component with too
             # few observations, we need to reinitialize this components
             cov_chol = scipy.linalg.cholesky(
-				    cv + min_covar * np.eye(n_dim), 
-					 lower=True
+                cv + min_covar * np.eye(n_dim), lower=True
             )
 
         return cov_chol
@@ -1190,35 +1192,33 @@ class SMM(sklearn.base.BaseEstimator):
     @staticmethod
     def _mahalanobis_distance_chol(X, mu, cov_chol):
         """Calculates the Mahalanobis distance between a matrix (set) of
-		  vectors (X) and another vector (mu).
+        vectors (X) and another vector (mu).
 
         The vectors must be organised by row in X, that is, the features
-		  are the columns.
+        are the columns.
 
-		  Parameters
-		  ----------
+        Parameters
+        ----------
         X : array_like, shape (n_samples, n_features).
-		      Sample in each row.
+            Sample in each row.
 
         mu : array_like (n_features).
-		       Mean vector of a single distribution (no mixture).
+             Mean vector of a single distribution (no mixture).
 
         cov_chol : array_like, shape (n_features, n_features).
                    Cholesky decomposition (L, i.e. lower triangular) of 
-						 the covariance (normalising) matrix in case that is 
-						 a full matrix. 
+                   the covariance (normalising) matrix in case that is 
+                   a full matrix. 
         
-		  Returns
-		  -------
+        Returns
+        -------
         retval : array_like, shape (n_samples,).
-		           Array of distances, each row represents the distance
-					  from the vector in the same row of X and mu. 
+                 Array of distances, each row represents the distance
+                 from the vector in the same row of X and mu. 
         """
 
         z = scipy.linalg.solve_triangular(
-		      cov_chol, 
-				(X - mu).T, 
-				lower=True
+            cov_chol, (X - mu).T, lower=True
         )
         retval = np.einsum('ij, ij->j', z, z)
 
@@ -1227,26 +1227,26 @@ class SMM(sklearn.base.BaseEstimator):
     @staticmethod
     def _mahalanobis_distance_mix_diag(X, means, covars, min_covar):
         """Calculates the mahalanobis distance between a matrix of 
-		  points and a mixture of distributions when the covariance 
-		  matrices are diagonal.
+        points and a mixture of distributions when the covariance 
+        matrices are diagonal.
         
-		  Parameters
-		  ----------
+        Parameters
+        ----------
         X : array_like, shape (n_samples, n_features).     
-		      Matrix with a sample in each row.
+            Matrix with a sample in each row.
 
         means : array_like, shape (n_components, n_features).
                 Mean vectors for n_components t-Students.
                 Each row corresponds to a single mean vector.
 
         covars : array_like, shape (n_components, n_features).
-		           Covariance parameters for each t-Student. 
+                 Covariance parameters for each t-Student. 
 
         Returns
         -------
         result : array_like, shape (n_samples, n_components).
-		           Mahalanobis distance from all the samples to all the i
-					  component means.
+                 Mahalanobis distance from all the samples to all the i
+                 component means.
         """
 
         n_samples, n_dim = X.shape
@@ -1266,10 +1266,10 @@ class SMM(sklearn.base.BaseEstimator):
     @staticmethod
     def _mahalanobis_distance_mix_full(X, means, covars, min_covar):
         """Calculates the mahalanobis distance between a matrix of 
-		  points and a mixture of distributions. 
-
-		  Parameters
-		  ----------
+        points and a mixture of distributions. 
+        
+	Parameters
+        ----------
         X : array_like, shape (n_samples, n_features).    
             Matrix with a sample vector in each row.
 
@@ -1277,14 +1277,14 @@ class SMM(sklearn.base.BaseEstimator):
                 Each row corresponds to a single mean vector.
 
         covars : array_like, shape (n_components, n_features, 
-		           n_features).
-		           Covariance parameters for each t-Student. 
+                 n_features).
+                 Covariance parameters for each t-Student. 
 
         Returns
-		  -------
+        -------
         result : array_like, shape (n_samples, n_components).
                  Mahalanobis distance from all the samples to all the 
-					  component means.
+                 component means.
         """
 
         n_samples, n_dim = X.shape
@@ -1293,7 +1293,7 @@ class SMM(sklearn.base.BaseEstimator):
         for c, (mu, cv) in enumerate(zip(means, covars)):
             cov_chol = SMM._cholesky(cv, min_covar)
             result[:, c] = SMM._mahalanobis_distance_chol(
-				    X, mu, cov_chol
+                X, mu, cov_chol
             )
         
         return result
@@ -1301,10 +1301,10 @@ class SMM(sklearn.base.BaseEstimator):
     @staticmethod
     def _mahalanobis_distance_mix_tied(X, means, covars, min_covar):
         """Calculates the mahalanobis distance between a matrix of 
-		  points and a mixture of distributions. 
+        points and a mixture of distributions. 
 
-		  Parameters
-		  ----------
+        Parameters
+        ----------
         X : array_like, shape (n_samples, n_features).    
             Matrix with a sample vector in each row.
 
@@ -1312,18 +1312,18 @@ class SMM(sklearn.base.BaseEstimator):
                 Each row corresponds to a single mean vector.
 
         covars : array_like, shape (n_features, n_features).
-		           Covariance parameters for each t-Student. 
+                 Covariance parameters for each t-Student. 
 
         Returns
-		  -------
+        -------
         retval : array_like, shape (n_samples, n_components).
                  Mahalanobis distance from all the samples to all the 
-					  component means.
+                 component means.
         """
 
         cv = np.tile(covars, (means.shape[0], 1, 1))
         retval = SMM._mahalanobis_distance_mix_full(
-		      X, means, cv, min_covar
+            X, means, cv, min_covar
         )
 
         return retval
@@ -1336,50 +1336,50 @@ class SMM(sklearn.base.BaseEstimator):
             if len(covars.shape) != 3:
                 raise ValueError(
                     "'full' covars must have shape (n_components, " \
-						  + "n_dim, n_dim)"
-					 )
+                    + "n_dim, n_dim)"
+                )
             elif covars.shape[1] != covars.shape[2]:
                 raise ValueError(
                     "'full' covars must have shape (n_components, " \
-						  + "n_dim, n_dim)"
-					 )
+                    + "n_dim, n_dim)"
+                )
             for n, cv in enumerate(covars):
                 if (not np.allclose(cv, cv.T) 
-					         or np.any(linalg.eigvalsh(cv) <= 0)):
+                        or np.any(linalg.eigvalsh(cv) <= 0)):
                     raise ValueError(
                         "component %d of 'full' covars must be "    \
-								+ "symmetric, positive-definite" % n
-						  )
+                        + "symmetric, positive-definite" % n
+                    )
                 else:
                     raise ValueError(
                         "covariance_type must be one of " \
-								    + "'spherical', 'tied', 'diag', 'full'"
-						  )
+                        + "'spherical', 'tied', 'diag', 'full'"
+                    )
         elif covariance_type == 'diag':
             if len(covars.shape) != 2:
                 raise ValueError(
                     "'diag' covars must have shape (n_components, " \
-						  + "n_dim)")
+                    + "n_dim)")
             elif np.any(covars <= 0):
                 raise ValueError("'diag' covars must be non-negative")
         elif covariance_type == 'spherical':
             if len(covars) != n_components:
                 raise ValueError(
                     "'spherical' covars have length n_components"
-					 )
+                )
             elif np.any(covars <= 0):
                 raise ValueError(
-					     "'spherical' covars must be non-negative"
+                    "'spherical' covars must be non-negative"
                 )
         elif covariance_type == 'tied':
             if covars.shape[0] != covars.shape[1]:
                 raise ValueError(
                     "'tied' covars must have shape (n_dim, n_dim)")
             elif (not np.allclose(covars, covars.T) 
-				        or np.any(np.linalg.eigvalsh(covars) <= 0)):
+                    or np.any(np.linalg.eigvalsh(covars) <= 0)):
                 raise ValueError(
                     "'tied' covars must be symmetric, " \
-						  + "positive-definite"
+                    + "positive-definite"
                 )
 
     @staticmethod
@@ -1387,32 +1387,32 @@ class SMM(sklearn.base.BaseEstimator):
 	         n_components):
         """Create all the covariance matrices from a given template.
         
-		  Parameters
-		  ----------
+        Parameters
+        ----------
         tied_cv : array_like, shape (n_features, n_features).
                   Tied covariance that is going to be converted to other
-						type.
+                  type.
 
         covariance_type : string.
-		                    Type of the covariance parameters. 
+                          Type of the covariance parameters. 
                           Must be one of 'spherical', 'tied', 'diag', 
-								  'full'.
+                          'full'.
 
         n_components : integer value.
-		                 Number of components in the mixture. 
+                       Number of components in the mixture. 
         
-		  Returns
-		  -------
+        Returns
+        -------
         cv : array_like, shape (depends on the covariance_type 
-		       parameter). 
-				 Tied covariance in the format specified by the user.
+             parameter). 
+             Tied covariance in the format specified by the user.
         """
 
         if covariance_type == 'spherical':
             cv = np.tile(
-				    tied_cv.mean() * np.ones(tied_cv.shape[1]), 
-				    (n_components, 1)
-				)
+                tied_cv.mean() * np.ones(tied_cv.shape[1]), 
+                (n_components, 1)
+            )
         elif covariance_type == 'tied':
             cv = tied_cv
         elif covariance_type == 'diag':
@@ -1421,7 +1421,7 @@ class SMM(sklearn.base.BaseEstimator):
             cv = np.tile(tied_cv, (n_components, 1, 1))
         else:
             raise ValueError(
-				    "covariance_type must be one of " 
+                "covariance_type must be one of " 
                 + "'spherical', 'tied', 'diag', 'full'"
             )
         return cv
@@ -1429,22 +1429,22 @@ class SMM(sklearn.base.BaseEstimator):
     @staticmethod
     def multivariate_t_rvs(m, S, df=np.inf, n=1):
         """Generate multivariate random variable sample from a t-Student
-		  distribution.
+        distribution.
         
-		  Author
-		  ------
-		  Original code by Enzo Michelangeli.
+        Author
+        ------
+        Original code by Enzo Michelangeli.
         Modified by Luis C. Garcia-Peraza Herrera.
-		  This static method is exclusively used by 'tests/smm_test.py'.
+        This static method is exclusively used by 'tests/smm_test.py'.
 
         Parameters
         ----------
         m : array_like, shape (n_features,).
-		      Mean vector, its length determines the dimension of the 
-				random variable.
+            Mean vector, its length determines the dimension of the 
+            random variable.
 
         S : array_like, shape (n_features, n_features).
-		      Covariance matrix.
+            Covariance matrix.
 
         df : int or float.
              Degrees of freedom.
@@ -1455,11 +1455,11 @@ class SMM(sklearn.base.BaseEstimator):
         Returns
         -------
         rvs : array_like, shape (n, len(m)). 
-		        Each row is an independent draw of a multivariate t 
-				  distributed random variable.
+              Each row is an independent draw of a multivariate t 
+              distributed random variable.
         """
         
-		  # Sanity check: dimension of mean and covariance compatible
+        # Sanity check: dimension of mean and covariance compatible
         assert(len(m.shape) == 1)
         assert(len(S.shape) == 2)
         assert(m.shape[0] == S.shape[0])
@@ -1512,7 +1512,7 @@ class SMM(sklearn.base.BaseEstimator):
     @property
     def degrees(self):
         """Returns the degrees of freedom of each component in the 
-		  mixture."""
+        mixture."""
         return self.degrees_
 
     @property
@@ -1520,7 +1520,7 @@ class SMM(sklearn.base.BaseEstimator):
         """Covariance parameters for each mixture component.
 
         Returns
-		  -------
+        -------
         The covariance matrices for all the classes. 
         The shape depends on the type of covariance matrix:
 
