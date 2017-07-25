@@ -1,5 +1,6 @@
 # t-Student-Mixture-Models
 Implementation of the paper: 'Robust mixture modelling using the t distribution', D. Peel and G. J. McLachlan.
+Compatible with Python 2.7 and Python 3.
 
 # Dependencies
 * scikit-learn v0.18.1
@@ -30,7 +31,6 @@ python src/smm/example.py
 # Tests
 To run the tests execute:
 ```
-python setup.py build
 python setup.py test
 ```
 
