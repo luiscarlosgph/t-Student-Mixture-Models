@@ -12,8 +12,11 @@ import scipy
 import sklearn
 import sklearn.utils
 import sklearn.utils.estimator_checks
+import os
+import sys
 
 # My imports
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../src/smm')))
 import smm
 
 # np.seterr(all='raise')
@@ -174,8 +177,6 @@ class TestSMM(unittest.TestCase):
             X, means, covars, dfs, min_covar)[0][0]
         self.assertTrue(np.fabs(correct_proba - proba) < eps)
 
-    '''
-
     def test_one_component_em(self):
         # Data
         n_samples = 1000000
@@ -253,7 +254,7 @@ class TestSMM(unittest.TestCase):
 
             # Generate k random covariance matrices
             vector_covars = np.random.randint(
-                100, size=(k, (n_dim + 1) * n_dim / 2))
+                100, size=(k, int((n_dim + 1) * n_dim / 2)))
             covars = np.zeros((k, n_dim, n_dim))
             for c in range(k):
                 covars[c][np.triu_indices(n_dim)] = vector_covars[c]
@@ -338,8 +339,6 @@ class TestSMM(unittest.TestCase):
             mix_t.weights_ = weights
             real_aic = mix_t.aic(obs)
             self.assertTrue(np.fabs(real_aic - estimated_aic) < aic_eps)
-
-    '''
 
 if __name__ == '__main__':
     unittest.main()

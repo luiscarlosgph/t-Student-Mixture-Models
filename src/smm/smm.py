@@ -253,12 +253,14 @@ class SMM(sklearn.base.BaseEstimator):
                     self.degrees_, responsibilities, z_sum, 
                     gammaweights_, n_dim, self.tol, self.n_iter
                 )
-            except FloatingPointError as e:
-                raise dofMaximizationError(e.message)
-            except RuntimeError as e:
-                if e.message.startswith('Failed to converge after'):
-                    warnings.warn(e.message, RuntimeWarning)
-		    pass
+            except FloatingPointError as fpe:
+                message = str(fpe)
+                raise dofMaximizationError(message)
+            except RuntimeError as re:
+                message = str(re)
+                if message.startswith('Failed to converge after'):
+                    warnings.warn(message, RuntimeWarning)
+                    pass
 
     def fit(self, X, y=None):
         """Estimate model parameters with the EM algorithm.

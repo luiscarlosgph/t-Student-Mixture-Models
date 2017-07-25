@@ -5,12 +5,16 @@ Implementation of the paper: 'Robust mixture modelling using the t distribution'
 * scikit-learn v0.18.1
 * numpy v1.11.0
 * nose v1.3.7
+* scipy v0.19.0
 
 # Usage
 See example in [src/example.py](src/example.py).
 
 # Tests
-Run [run_tests.sh](run_tests.sh).
+```
+python setup.py build
+python setup.py test
+```
 
 # Documentation
 See [doc/smm.html](doc/smm.html). 
