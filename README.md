@@ -8,7 +8,7 @@ Implementation of the paper: 'Robust mixture modelling using the t distribution'
 * scipy v0.19.0
 
 # Usage
-See example in [src/example.py](src/example.py).
+See example in [src/smm/example.py](src/smm/example.py).
 
 # Tests
 ```
