@@ -42,7 +42,7 @@ To re-run the coverage test (Ubuntu Ubuntu 16.04.2 LTS):
 python3-coverage run ./setup.py test
 python3-coverage html
 ```
-Then open 'htmlcov/index.html' and check the line: 'src/smm/smm'.
+Then open 'htmlcov/index.html' and check the line 'src/smm/smm'.
 
 # Documentation
 See [doc/smm.html](doc/smm.html).
