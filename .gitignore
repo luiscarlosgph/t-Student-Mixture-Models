@@ -1,9 +1,9 @@
-smm.egg-info
-__pycache__
-build
-.cache
+smm.egg-info/*
+__pycache__/*
+build/*
+.cache/*
 .coverage
 *.pyc
-htmlcov
+htmlcov/*
 .DS_Store
-dist
+dist/*
