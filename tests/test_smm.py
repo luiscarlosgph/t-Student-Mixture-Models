@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 #
 # @brief  Unit testing to check that the EM optimization for a mixture of t-Student distributions is working
 #         as expected.

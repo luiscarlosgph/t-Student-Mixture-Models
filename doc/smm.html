@@ -9,7 +9,7 @@
 <td valign=bottom>&nbsp;<br>
 <font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>smm</strong></big></big></font></td
 ><td align=right valign=bottom
-><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/luis/pantopolium/projects/t-Student-Mixture-Models/src/smm.py">/home/luis/pantopolium/projects/t-Student-Mixture-Models/src/smm.py</a></font></td></tr></table>
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/luis/pantopolium/projects/t-Student-Mixture-Models/src/smm/smm.py">/home/luis/pantopolium/projects/t-Student-Mixture-Models/src/smm/smm.py</a></font></td></tr></table>
     <p><tt>t-Student&nbsp;Mixture&nbsp;Models.<br>
 &nbsp;<br>
 This&nbsp;class&nbsp;has&nbsp;reused&nbsp;code&nbsp;and&nbsp;comments&nbsp;from&nbsp;sklearn.mixture.gmm.<br>
@@ -37,7 +37,8 @@ Luis&nbsp;Carlos&nbsp;Garcia-Peraza&nbsp;Herrera&nbsp;(luis.herrera.14@ucl.ac.uk
 <td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="numpy.html">numpy</a><br>
 </td><td width="25%" valign=top><a href="scipy.html">scipy</a><br>
 </td><td width="25%" valign=top><a href="sklearn.html">sklearn</a><br>
-</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+</td><td width="25%" valign=top><a href="warnings.html">warnings</a><br>
+</td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ee77aa">
 <td colspan=3 valign=bottom>&nbsp;<br>
@@ -93,7 +94,7 @@ random_state:&nbsp;RandomState&nbsp;or&nbsp;an&nbsp;int&nbsp;seed.<br>
 &nbsp;<br>
 tol&nbsp;:&nbsp;float,&nbsp;optional.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Convergence&nbsp;threshold.&nbsp;EM&nbsp;iterations&nbsp;will&nbsp;stop&nbsp;when&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;average&nbsp;gain&nbsp;in&nbsp;log-likelihood&nbsp;is&nbsp;below&nbsp;this&nbsp;threshold.&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;average&nbsp;gain&nbsp;in&nbsp;log-likelihood&nbsp;is&nbsp;below&nbsp;this&nbsp;threshold.&nbsp;&nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Defaults&nbsp;to&nbsp;1e-6.<br>
 &nbsp;<br>
 min_covar&nbsp;:&nbsp;float,&nbsp;optional.<br>
@@ -113,16 +114,16 @@ n_init&nbsp;:&nbsp;int,&nbsp;optional.<br>
 params&nbsp;:&nbsp;string,&nbsp;optional.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Controls&nbsp;which&nbsp;parameters&nbsp;are&nbsp;updated&nbsp;in&nbsp;the&nbsp;training&nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;process.&nbsp;Can&nbsp;contain&nbsp;any&nbsp;combination&nbsp;of&nbsp;'w'&nbsp;for&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;weights,&nbsp;'m'&nbsp;for&nbsp;means,&nbsp;'c'&nbsp;for&nbsp;covars,&nbsp;and&nbsp;'d'&nbsp;for&nbsp;the<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;degrees&nbsp;of&nbsp;freedom.&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;weights,&nbsp;'m'&nbsp;for&nbsp;means,&nbsp;'c'&nbsp;for&nbsp;covars,&nbsp;and&nbsp;'d'&nbsp;for&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;degrees&nbsp;of&nbsp;freedom.&nbsp;&nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Defaults&nbsp;to&nbsp;'wmcd'.<br>
 &nbsp;<br>
 init_params&nbsp;:&nbsp;string,&nbsp;optional.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Controls&nbsp;which&nbsp;parameters&nbsp;are&nbsp;updated&nbsp;in&nbsp;the&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;initialization&nbsp;process.&nbsp;&nbsp;Can&nbsp;contain&nbsp;any&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;combination&nbsp;of&nbsp;'w'&nbsp;for&nbsp;weights,&nbsp;'m'&nbsp;for&nbsp;means,&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'c'&nbsp;for&nbsp;covars,&nbsp;and&nbsp;'d'&nbsp;for&nbsp;the&nbsp;degrees&nbsp;of&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;freedom.&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;initialization&nbsp;process.&nbsp;&nbsp;Can&nbsp;contain&nbsp;any&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;combination&nbsp;of&nbsp;'w'&nbsp;for&nbsp;weights,&nbsp;'m'&nbsp;for&nbsp;means,&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'c'&nbsp;for&nbsp;covars,&nbsp;and&nbsp;'d'&nbsp;for&nbsp;the&nbsp;degrees&nbsp;of&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;freedom.&nbsp;&nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Defaults&nbsp;to&nbsp;'wmcd'.<br>
 &nbsp;<br>
 Attributes<br>
@@ -138,10 +139,10 @@ covars_&nbsp;:&nbsp;array_like.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Covariance&nbsp;parameters&nbsp;for&nbsp;each&nbsp;mixture&nbsp;component.&nbsp;The&nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;shape&nbsp;depends&nbsp;on&nbsp;`covariance_type`:<br>
 &nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(n_components,&nbsp;n_features)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;'spherical',<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(n_features,&nbsp;n_features)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;'tied',<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(n_components,&nbsp;n_features)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;'diag',<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(n_components,&nbsp;n_features,&nbsp;n_features)&nbsp;if&nbsp;'full'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(n_components,&nbsp;n_features)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;'spherical',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(n_features,&nbsp;n_features)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;'tied',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(n_components,&nbsp;n_features)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;'diag',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(n_components,&nbsp;n_features,&nbsp;n_features)&nbsp;if&nbsp;'full'<br>
 &nbsp;<br>
 converged_&nbsp;:&nbsp;bool.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;True&nbsp;when&nbsp;convergence&nbsp;was&nbsp;reached&nbsp;in&nbsp;<a href="#SMM-fit">fit</a>(),&nbsp;False&nbsp;<br>
@@ -154,28 +155,28 @@ converged_&nbsp;:&nbsp;bool.<br>
 </dl>
 <hr>
 Methods defined here:<br>
-<dl><dt><a name="SMM-__init__"><strong>__init__</strong></a>(self, n_components<font color="#909090">=1</font>, covariance_type<font color="#909090">=None</font>, random_state<font color="#909090">=None</font>, tol<font color="#909090">=None</font>, min_covar<font color="#909090">=None</font>, n_iter<font color="#909090">=None</font>, n_init<font color="#909090">=None</font>, params<font color="#909090">=None</font>, init_params<font color="#909090">=None</font>)</dt></dl>
+<dl><dt><a name="SMM-__init__"><strong>__init__</strong></a>(self, n_components<font color="#909090">=1</font>, covariance_type<font color="#909090">='full'</font>, random_state<font color="#909090">=None</font>, tol<font color="#909090">=1e-06</font>, min_covar<font color="#909090">=1e-06</font>, n_iter<font color="#909090">=1000</font>, n_init<font color="#909090">=1</font>, params<font color="#909090">='wmcd'</font>, init_params<font color="#909090">='wmcd'</font>)</dt></dl>
 
 <dl><dt><a name="SMM-aic"><strong>aic</strong></a>(self, X)</dt><dd><tt>Akaike&nbsp;information&nbsp;criterion&nbsp;for&nbsp;the&nbsp;current&nbsp;model&nbsp;fit&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;the&nbsp;proposed&nbsp;data.<br>
+and&nbsp;the&nbsp;proposed&nbsp;data.<br>
 &nbsp;<br>
 Parameters<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;----------<br>
+----------<br>
 X&nbsp;:&nbsp;array_like,&nbsp;shape&nbsp;(n_samples,&nbsp;n_features).<br>
 &nbsp;<br>
 Returns<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-------<br>
+-------<br>
 A&nbsp;float&nbsp;(the&nbsp;lower&nbsp;the&nbsp;better).</tt></dd></dl>
 
 <dl><dt><a name="SMM-bic"><strong>bic</strong></a>(self, X)</dt><dd><tt>Bayesian&nbsp;information&nbsp;criterion&nbsp;for&nbsp;the&nbsp;current&nbsp;model&nbsp;fit&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;the&nbsp;proposed&nbsp;data.<br>
+and&nbsp;the&nbsp;proposed&nbsp;data.<br>
 &nbsp;<br>
 Parameters<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;----------<br>
+----------<br>
 X&nbsp;:&nbsp;array_like,&nbsp;shape&nbsp;(n_samples,&nbsp;n_features).<br>
 &nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-------<br>
+Returns<br>
+-------<br>
 A&nbsp;float&nbsp;(the&nbsp;lower&nbsp;the&nbsp;better).</tt></dd></dl>
 
 <dl><dt><a name="SMM-fit"><strong>fit</strong></a>(self, X, y<font color="#909090">=None</font>)</dt><dd><tt>Estimate&nbsp;model&nbsp;parameters&nbsp;with&nbsp;the&nbsp;EM&nbsp;algorithm.<br>
@@ -183,123 +184,151 @@ A&nbsp;float&nbsp;(the&nbsp;lower&nbsp;the&nbsp;better).</tt></dd></dl>
 A&nbsp;initialization&nbsp;step&nbsp;is&nbsp;performed&nbsp;before&nbsp;entering&nbsp;the&nbsp;em<br>
 algorithm.&nbsp;If&nbsp;you&nbsp;want&nbsp;to&nbsp;avoid&nbsp;this&nbsp;step,&nbsp;set&nbsp;the&nbsp;keyword<br>
 argument&nbsp;init_params&nbsp;to&nbsp;the&nbsp;empty&nbsp;string&nbsp;''&nbsp;when&nbsp;creating&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;<a href="#SMM">SMM</a>&nbsp;object.&nbsp;Likewise,&nbsp;if&nbsp;you&nbsp;would&nbsp;like&nbsp;just&nbsp;to&nbsp;do&nbsp;an<br>
+the&nbsp;<a href="#SMM">SMM</a>&nbsp;object.&nbsp;Likewise,&nbsp;if&nbsp;you&nbsp;would&nbsp;like&nbsp;just&nbsp;to&nbsp;do&nbsp;an<br>
 initialization,&nbsp;set&nbsp;n_iter=0.<br>
 &nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Parameters<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;----------<br>
+Parameters<br>
+----------<br>
 X&nbsp;:&nbsp;array_like,&nbsp;shape&nbsp;(n_samples,&nbsp;n_features).<br>
 &nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;y&nbsp;:&nbsp;not&nbsp;used,&nbsp;just&nbsp;for&nbsp;compatibility&nbsp;with&nbsp;sklearn&nbsp;API.</tt></dd></dl>
+y&nbsp;:&nbsp;not&nbsp;used,&nbsp;just&nbsp;for&nbsp;compatibility&nbsp;with&nbsp;sklearn&nbsp;API.</tt></dd></dl>
 
 <dl><dt><a name="SMM-predict"><strong>predict</strong></a>(self, X)</dt><dd><tt>Predict&nbsp;label&nbsp;for&nbsp;data.<br>
 &nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;function&nbsp;will&nbsp;tell&nbsp;you&nbsp;which&nbsp;component&nbsp;of&nbsp;the&nbsp;mixture<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;most&nbsp;likely&nbsp;generated&nbsp;the&nbsp;sample.<br>
+This&nbsp;function&nbsp;will&nbsp;tell&nbsp;you&nbsp;which&nbsp;component&nbsp;of&nbsp;the&nbsp;mixture<br>
+most&nbsp;likely&nbsp;generated&nbsp;the&nbsp;sample.<br>
 &nbsp;<br>
 Parameters<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;----------<br>
+----------<br>
 X&nbsp;:&nbsp;array-like,&nbsp;shape&nbsp;(n_samples,&nbsp;n_features).<br>
 &nbsp;<br>
 Returns<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-------<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array_like,&nbsp;shape&nbsp;(n_samples,).</tt></dd></dl>
+-------<br>
+r_argmax&nbsp;:&nbsp;array_like,&nbsp;shape&nbsp;(n_samples,).</tt></dd></dl>
 
 <dl><dt><a name="SMM-predict_proba"><strong>predict_proba</strong></a>(self, X)</dt><dd><tt>Predict&nbsp;label&nbsp;for&nbsp;data.<br>
 &nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;function&nbsp;will&nbsp;tell&nbsp;the&nbsp;probability&nbsp;of&nbsp;each&nbsp;component<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;generating&nbsp;each&nbsp;sample.<br>
+This&nbsp;function&nbsp;will&nbsp;tell&nbsp;the&nbsp;probability&nbsp;of&nbsp;each&nbsp;component<br>
+generating&nbsp;each&nbsp;sample.<br>
 &nbsp;<br>
 Parameters<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;----------<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;X&nbsp;:&nbsp;array-like,&nbsp;shape&nbsp;(n_samples,&nbsp;n_features).<br>
+----------<br>
+X&nbsp;:&nbsp;array-like,&nbsp;shape&nbsp;(n_samples,&nbsp;n_features).<br>
 &nbsp;<br>
 Returns<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-------<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array_like,&nbsp;shape&nbsp;(n_samples,&nbsp;n_components).</tt></dd></dl>
+-------<br>
+responsibilities&nbsp;:&nbsp;array_like,&nbsp;shape&nbsp;(n_samples,&nbsp;n_components).</tt></dd></dl>
 
 <dl><dt><a name="SMM-score"><strong>score</strong></a>(self, X, y<font color="#909090">=None</font>)</dt><dd><tt>Compute&nbsp;the&nbsp;log&nbsp;probability&nbsp;under&nbsp;the&nbsp;model.<br>
 &nbsp;<br>
 Parameters<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;----------<br>
+----------<br>
 X&nbsp;:&nbsp;array_like,&nbsp;shape&nbsp;(n_samples,&nbsp;n_features).&nbsp;<br>
 &nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-------<br>
+Returns<br>
+-------<br>
 prob&nbsp;:&nbsp;array_like,&nbsp;shape&nbsp;(n_samples,).&nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Probabilities&nbsp;of&nbsp;each&nbsp;data&nbsp;point&nbsp;in&nbsp;X.</tt></dd></dl>
 
 <dl><dt><a name="SMM-score_samples"><strong>score_samples</strong></a>(self, X)</dt><dd><tt>Per-sample&nbsp;likelihood&nbsp;of&nbsp;the&nbsp;data&nbsp;under&nbsp;the&nbsp;model.<br>
 &nbsp;<br>
 Compute&nbsp;the&nbsp;probability&nbsp;of&nbsp;X&nbsp;under&nbsp;the&nbsp;model&nbsp;and&nbsp;return&nbsp;the&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;posterior&nbsp;distribution&nbsp;(responsibilities)&nbsp;of&nbsp;each&nbsp;mixture&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;component&nbsp;for&nbsp;each&nbsp;element&nbsp;of&nbsp;X.<br>
-&nbsp;<br>
-Parameters<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;----------<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;X&nbsp;:&nbsp;array_like,&nbsp;shape&nbsp;(n_samples,&nbsp;n_features).&nbsp;<br>
-&nbsp;<br>
-Returns<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-------<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;prob&nbsp;:&nbsp;array_like,&nbsp;shape&nbsp;(n_samples,).&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Unnormalised&nbsp;probability&nbsp;of&nbsp;each&nbsp;data&nbsp;point&nbsp;in&nbsp;X,&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i.e.&nbsp;likelihoods.&nbsp;<br>
-&nbsp;<br>
-responsibilities&nbsp;:&nbsp;array_like,&nbsp;shape&nbsp;(n_samples,&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;n_components).&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Posterior&nbsp;probabilities&nbsp;of&nbsp;each&nbsp;mixture&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;component&nbsp;for&nbsp;each&nbsp;observation.</tt></dd></dl>
-
-<hr>
-Static methods defined here:<br>
-<dl><dt><a name="SMM-dist_covar_to_match_cov_type"><strong>dist_covar_to_match_cov_type</strong></a>(tied_cv, covariance_type, n_components)</dt><dd><tt>@brief&nbsp;Create&nbsp;all&nbsp;the&nbsp;covariance&nbsp;matrices&nbsp;from&nbsp;a&nbsp;given&nbsp;template.<br>
-&nbsp;<br>
-@param[in]&nbsp;tied_cv&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tied&nbsp;covariance&nbsp;that&nbsp;is&nbsp;going&nbsp;to&nbsp;be&nbsp;converted&nbsp;to&nbsp;other&nbsp;type.<br>
-@param[in]&nbsp;covariance_type&nbsp;String&nbsp;that&nbsp;represents&nbsp;the&nbsp;type&nbsp;of&nbsp;the&nbsp;covariance&nbsp;parameters.&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Must&nbsp;be&nbsp;one&nbsp;of&nbsp;'spherical',&nbsp;'tied',&nbsp;'diag',&nbsp;'full'.<br>
-@param[in]&nbsp;n_components&nbsp;&nbsp;&nbsp;&nbsp;Number&nbsp;of&nbsp;components&nbsp;in&nbsp;the&nbsp;mixture&nbsp;(integer&nbsp;value).<br>
-&nbsp;<br>
-@returns&nbsp;the&nbsp;tied&nbsp;covariance&nbsp;in&nbsp;the&nbsp;format&nbsp;specified&nbsp;by&nbsp;the&nbsp;user.</tt></dd></dl>
-
-<dl><dt><a name="SMM-multivariate_t_rvs"><strong>multivariate_t_rvs</strong></a>(m, S, df<font color="#909090">=inf</font>, n<font color="#909090">=1</font>)</dt><dd><tt>@brief&nbsp;Generate&nbsp;multivariate&nbsp;random&nbsp;variable&nbsp;sample&nbsp;from&nbsp;a&nbsp;t-Student&nbsp;distribution.<br>
-@author&nbsp;Enzo&nbsp;Michelangeli<br>
+posterior&nbsp;distribution&nbsp;(responsibilities)&nbsp;of&nbsp;each&nbsp;mixture&nbsp;<br>
+component&nbsp;for&nbsp;each&nbsp;element&nbsp;of&nbsp;X.<br>
 &nbsp;<br>
 Parameters<br>
 ----------<br>
-m&nbsp;:&nbsp;array_like,&nbsp;mean&nbsp;of&nbsp;random&nbsp;variable,&nbsp;length&nbsp;determines&nbsp;dimension&nbsp;of&nbsp;random&nbsp;variable.<br>
-&nbsp;<br>
-S&nbsp;:&nbsp;array_like,&nbsp;square&nbsp;array&nbsp;of&nbsp;covariance&nbsp;&nbsp;matrix.<br>
-&nbsp;<br>
-df&nbsp;:&nbsp;int&nbsp;or&nbsp;float,&nbsp;degrees&nbsp;of&nbsp;freedom.<br>
-&nbsp;<br>
-n&nbsp;:&nbsp;int,&nbsp;number&nbsp;of&nbsp;observations,&nbsp;return&nbsp;random&nbsp;array&nbsp;will&nbsp;be&nbsp;(n,&nbsp;len(m)).<br>
+X&nbsp;:&nbsp;array_like,&nbsp;shape&nbsp;(n_samples,&nbsp;n_features).&nbsp;<br>
 &nbsp;<br>
 Returns<br>
 -------<br>
-rvs&nbsp;:&nbsp;ndarray,&nbsp;(n,&nbsp;len(m)),&nbsp;each&nbsp;row&nbsp;is&nbsp;an&nbsp;independent&nbsp;draw&nbsp;of&nbsp;a&nbsp;multivariate&nbsp;t&nbsp;distributed&nbsp;random&nbsp;<br>
-variable</tt></dd></dl>
+prob&nbsp;:&nbsp;array_like,&nbsp;shape&nbsp;(n_samples,).&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Unnormalised&nbsp;probability&nbsp;of&nbsp;each&nbsp;data&nbsp;point&nbsp;in&nbsp;X,&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i.e.&nbsp;likelihoods.&nbsp;<br>
+&nbsp;<br>
+responsibilities&nbsp;:&nbsp;array_like,&nbsp;shape&nbsp;(n_samples,&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;n_components).&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Posterior&nbsp;probabilities&nbsp;of&nbsp;each&nbsp;mixture&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;component&nbsp;for&nbsp;each&nbsp;observation.</tt></dd></dl>
+
+<hr>
+Static methods defined here:<br>
+<dl><dt><a name="SMM-dist_covar_to_match_cov_type"><strong>dist_covar_to_match_cov_type</strong></a>(tied_cv, covariance_type, n_components)</dt><dd><tt>Create&nbsp;all&nbsp;the&nbsp;covariance&nbsp;matrices&nbsp;from&nbsp;a&nbsp;given&nbsp;template.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+tied_cv&nbsp;:&nbsp;array_like,&nbsp;shape&nbsp;(n_features,&nbsp;n_features).<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tied&nbsp;covariance&nbsp;that&nbsp;is&nbsp;going&nbsp;to&nbsp;be&nbsp;converted&nbsp;to&nbsp;other<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;type.<br>
+&nbsp;<br>
+covariance_type&nbsp;:&nbsp;string.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Type&nbsp;of&nbsp;the&nbsp;covariance&nbsp;parameters.&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Must&nbsp;be&nbsp;one&nbsp;of&nbsp;'spherical',&nbsp;'tied',&nbsp;'diag',&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'full'.<br>
+&nbsp;<br>
+n_components&nbsp;:&nbsp;integer&nbsp;value.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Number&nbsp;of&nbsp;components&nbsp;in&nbsp;the&nbsp;mixture.&nbsp;<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+cv&nbsp;:&nbsp;array_like,&nbsp;shape&nbsp;(depends&nbsp;on&nbsp;the&nbsp;covariance_type&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;parameter).&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tied&nbsp;covariance&nbsp;in&nbsp;the&nbsp;format&nbsp;specified&nbsp;by&nbsp;the&nbsp;user.</tt></dd></dl>
+
+<dl><dt><a name="SMM-multivariate_t_rvs"><strong>multivariate_t_rvs</strong></a>(m, S, df<font color="#909090">=inf</font>, n<font color="#909090">=1</font>)</dt><dd><tt>Generate&nbsp;multivariate&nbsp;random&nbsp;variable&nbsp;sample&nbsp;from&nbsp;a&nbsp;t-Student<br>
+distribution.<br>
+&nbsp;<br>
+Author<br>
+------<br>
+Original&nbsp;code&nbsp;by&nbsp;Enzo&nbsp;Michelangeli.<br>
+Modified&nbsp;by&nbsp;Luis&nbsp;C.&nbsp;Garcia-Peraza&nbsp;Herrera.<br>
+This&nbsp;static&nbsp;method&nbsp;is&nbsp;exclusively&nbsp;used&nbsp;by&nbsp;'tests/smm_test.py'.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+m&nbsp;:&nbsp;array_like,&nbsp;shape&nbsp;(n_features,).<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Mean&nbsp;vector,&nbsp;its&nbsp;length&nbsp;determines&nbsp;the&nbsp;dimension&nbsp;of&nbsp;the&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;random&nbsp;variable.<br>
+&nbsp;<br>
+S&nbsp;:&nbsp;array_like,&nbsp;shape&nbsp;(n_features,&nbsp;n_features).<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Covariance&nbsp;matrix.<br>
+&nbsp;<br>
+df&nbsp;:&nbsp;int&nbsp;or&nbsp;float.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Degrees&nbsp;of&nbsp;freedom.<br>
+&nbsp;<br>
+n&nbsp;:&nbsp;int.&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Number&nbsp;of&nbsp;observations.<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+rvs&nbsp;:&nbsp;array_like,&nbsp;shape&nbsp;(n,&nbsp;len(m)).&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Each&nbsp;row&nbsp;is&nbsp;an&nbsp;independent&nbsp;draw&nbsp;of&nbsp;a&nbsp;multivariate&nbsp;t&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;distributed&nbsp;random&nbsp;variable.</tt></dd></dl>
 
 <hr>
 Data descriptors defined here:<br>
 <dl><dt><strong>covariances</strong></dt>
-<dd><tt>@brief&nbsp;Covariance&nbsp;parameters&nbsp;for&nbsp;each&nbsp;mixture&nbsp;component.<br>
-@details&nbsp;The&nbsp;shape&nbsp;depends&nbsp;on&nbsp;the&nbsp;type&nbsp;of&nbsp;covariance&nbsp;matrix:<br>
+<dd><tt>Covariance&nbsp;parameters&nbsp;for&nbsp;each&nbsp;mixture&nbsp;component.<br>
 &nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(n_classes,&nbsp;&nbsp;n_features)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;'diag',<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(n_classes,&nbsp;&nbsp;n_features,&nbsp;n_features)&nbsp;&nbsp;&nbsp;if&nbsp;'full'<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(n_classes,&nbsp;&nbsp;n_features)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;'spherical',<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(n_features,&nbsp;n_features)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;'tied',<br>
+Returns<br>
+-------<br>
+The&nbsp;covariance&nbsp;matrices&nbsp;for&nbsp;all&nbsp;the&nbsp;classes.&nbsp;<br>
+The&nbsp;shape&nbsp;depends&nbsp;on&nbsp;the&nbsp;type&nbsp;of&nbsp;covariance&nbsp;matrix:<br>
 &nbsp;<br>
-@returns&nbsp;the&nbsp;covariance&nbsp;matrices&nbsp;for&nbsp;all&nbsp;the&nbsp;classes.</tt></dd>
+&nbsp;&nbsp;&nbsp;&nbsp;(n_classes,&nbsp;&nbsp;n_features)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;'diag',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(n_classes,&nbsp;&nbsp;n_features,&nbsp;n_features)&nbsp;&nbsp;&nbsp;if&nbsp;'full'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(n_classes,&nbsp;&nbsp;n_features)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;'spherical',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(n_features,&nbsp;n_features)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;'tied',</tt></dd>
 </dl>
 <dl><dt><strong>degrees</strong></dt>
-<dd><tt>@returns&nbsp;the&nbsp;degrees&nbsp;of&nbsp;freedom&nbsp;of&nbsp;each&nbsp;component&nbsp;in&nbsp;the&nbsp;mixture</tt></dd>
+<dd><tt>Returns&nbsp;the&nbsp;degrees&nbsp;of&nbsp;freedom&nbsp;of&nbsp;each&nbsp;component&nbsp;in&nbsp;the&nbsp;<br>
+mixture.</tt></dd>
 </dl>
 <dl><dt><strong>means</strong></dt>
-<dd><tt>@returns&nbsp;the&nbsp;means&nbsp;of&nbsp;each&nbsp;component&nbsp;in&nbsp;the&nbsp;mixture</tt></dd>
+<dd><tt>Returns&nbsp;the&nbsp;means&nbsp;of&nbsp;each&nbsp;component&nbsp;in&nbsp;the&nbsp;mixture.</tt></dd>
 </dl>
 <dl><dt><strong>weights</strong></dt>
-<dd><tt>@returns&nbsp;the&nbsp;weights&nbsp;of&nbsp;each&nbsp;component&nbsp;in&nbsp;the&nbsp;mixture</tt></dd>
+<dd><tt>Returns&nbsp;the&nbsp;weights&nbsp;of&nbsp;each&nbsp;component&nbsp;in&nbsp;the&nbsp;mixture.</tt></dd>
 </dl>
 <hr>
 Methods inherited from <a href="sklearn.base.html#BaseEstimator">sklearn.base.BaseEstimator</a>:<br>

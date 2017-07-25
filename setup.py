@@ -4,14 +4,8 @@ import os
 import setuptools
 import unittest
 
-
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
-
-def my_module_suite():
-    loader = unittest.TestLoader()
-    suite = loader.loadTestsFromModule(test_smm)
-    return suite
 
 setuptools.setup(name='smm',
     version='0.1.1',

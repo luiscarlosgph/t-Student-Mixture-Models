@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 #
 # @brief  Example that shows how to generate a random sample of data coming from a mixture of t-Student 
 #         distributions and then use the 'smm.SMM' class to estimate the parameters of the original model 
