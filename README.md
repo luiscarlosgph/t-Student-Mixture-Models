@@ -24,8 +24,7 @@ python setup.py install --user
 # Usage
 See example in [src/smm/example.py](src/smm/example.py). 
 ```
-python setup.py build
-python build/lib/smm/example.py
+python src/smm/example.py
 ```
 
 # Tests
