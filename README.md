@@ -1,4 +1,5 @@
 # t-Student-Mixture-Models
+[![Build Status](https://travis-ci.org/luiscarlosgph/t-Student-Mixture-Models.svg?branch=master)](https://travis-ci.org/luiscarlosgph/t-Student-Mixture-Models)  
 Implementation of the paper: 'Robust mixture modelling using the t distribution', D. Peel and G. J. McLachlan.
 Compatible with Python 2.7 and Python 3.
 
