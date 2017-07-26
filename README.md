@@ -5,7 +5,6 @@ Compatible with Python 2.7 and Python 3.
 # Dependencies
 * scikit-learn v0.18.1
 * numpy v1.11.0
-* nose v1.3.7
 * scipy v0.19.0
 * setuptools v36.0.1
 
