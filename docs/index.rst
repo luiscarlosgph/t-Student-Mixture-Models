@@ -1,7 +1,5 @@
 .. t-Student-Mixture-Models documentation master file, created by
    sphinx-quickstart on Tue Aug  1 12:12:16 2017.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
 
 t-Student-Mixture-Models's documentation
 ========================================
@@ -11,9 +9,6 @@ t-Student-Mixture-Models's documentation
 - Compatible with Python 2.7 and Python 3.
 
 Contents:
-
-- [src/smm.html#module-smm.smm](Documentation of the smm.SMM class)
-- [_modules/smm/example.html](Example of use of the smm.SMM class)
 
 .. toctree::
    :maxdepth: 2
