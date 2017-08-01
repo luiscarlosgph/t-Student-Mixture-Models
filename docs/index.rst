@@ -10,7 +10,7 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
-	smm
+	src/smm.rst
 
 Indices and tables
 ==================
