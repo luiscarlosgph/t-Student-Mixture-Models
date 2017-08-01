@@ -45,12 +45,7 @@ python-coverage html
 Then open 'htmlcov/index.html' and check the line 'src/smm/smm'.
 
 # Documentation
-See [http://t-student-mixture-models.readthedocs.io/en/latest/](t-Student-Mixture-Models documentation).
-To re-generate the documentation:
-```
-cd doc
-pydoc -w ../src/smm/smm.py
-```
+See [t-Student-Mixture-Models documentation](http://t-student-mixture-models.readthedocs.io/en/latest).
 
 # Author
 Luis Carlos Garcia-Peraza Herrera (luis.herrera.14@ucl.ac.uk).
