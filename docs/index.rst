@@ -1,5 +1,5 @@
-t-Student-Mixture-Models's documentation
-========================================
+t-Student-Mixture-Models
+========================
 
 - This module allows you to model data by a mixture of t-Student distributions, estimating the parameters with Expectation-Maximisation.
 - Implementation of the paper: 'Robust mixture modelling using the t distribution', D. Peel and G. J. McLachlan. 
@@ -9,6 +9,8 @@ Contents:
 
 .. toctree::
    :maxdepth: 2
+
+	smm
 
 Indices and tables
 ==================
