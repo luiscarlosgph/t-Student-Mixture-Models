@@ -1,9 +1,10 @@
 """t-Student Mixture Models Module (smm).
 
 - This module allows you to model data by a mixture of t-Student \
-distributions, estimating the parameters with Expectation-Maximisation.
-It is an implementation of the paper: 'Robust mixture modelling using
-the t distribution', D. Peel and G. J. McLachlan. Published at:
+distributions, estimating the parameters with \
+Expectation-Maximisation. \
+It is an implementation of the paper: 'Robust mixture modelling using \
+the t distribution', D. Peel and G. J. McLachlan. Published at: \
 Statistics and Computing (2000) 10, 339-348.   
 
 - This module has reused code and comments from sklearn.mixture.gmm.  
