@@ -10,7 +10,8 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
-	readme
+   readme
+   src/modules
 
 Indices and tables
 ==================
