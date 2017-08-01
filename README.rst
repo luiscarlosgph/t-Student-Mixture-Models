@@ -1,10 +1,7 @@
 t-Student-Mixture-Models
 ========================
 
-| |Build Status| |Documentation Status|
-| Implementation of the paper: 'Robust mixture modelling using the t
-  distribution', D. Peel and G. J. McLachlan. Compatible with Python 2.7
-  and Python 3.
+Implementation of the paper: 'Robust mixture modelling using the t-distribution', D. Peel and G. J. McLachlan. Compatible with Python 2.7 and Python 3.
 
 Dependencies
 ============
@@ -82,8 +79,3 @@ License
 =======
 
 BSD 3-Clause License, see LICENSE file for more information.
-
-.. |Build Status| image:: https://travis-ci.org/luiscarlosgph/t-Student-Mixture-Models.svg?branch=master
-   :target: https://travis-ci.org/luiscarlosgph/t-Student-Mixture-Models
-.. |Documentation Status| image:: https://readthedocs.org/projects/t-student-mixture-models/badge/?version=latest
-   :target: http://t-student-mixture-models.readthedocs.io/en/latest/?badge=latest
