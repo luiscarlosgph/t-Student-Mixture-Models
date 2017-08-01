@@ -4,11 +4,11 @@
 distributions, estimating the parameters with Expectation-Maximisation. 
 It is an implementation of the paper: 'Robust mixture modelling using 
 the t distribution', D. Peel and G. J. McLachlan. Published at:
-Statistics and Computing (2000) 10, 339-348.
+Statistics and Computing (2000) 10, 339-348.  
 - This module has reused code and comments from sklearn.mixture.gmm.
-- Compatible with Python 2.7 and Python 3.
+- Compatible with Python 2.7 and Python 3.  
 - This code has been produced during my PhD at University College 
-London under the supervision of Prof. Sebastien Ourselin and Dr. Tom Vercauteren.
+London under the supervision of Prof. Sebastien Ourselin and Dr. Tom Vercauteren.  
 
 Luis Carlos Garcia-Peraza Herrera (luis.herrera.14@ucl.ac.uk).
 24 Nov 2015.
