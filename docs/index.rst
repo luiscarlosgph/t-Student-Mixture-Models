@@ -12,10 +12,11 @@ t-Student-Mixture-Models's documentation
 
 Contents:
 
+- [src/smm.html#module-smm.smm](Documentation of the smm.SMM class)
+- [_modules/smm/example.html](Example of use of the smm.SMM class)
+
 .. toctree::
    :maxdepth: 2
-
-   readme
 
 Indices and tables
 ==================
