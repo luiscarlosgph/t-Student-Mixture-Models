@@ -1,6 +1,3 @@
-.. t-Student-Mixture-Models documentation master file, created by
-   sphinx-quickstart on Tue Aug  1 12:12:16 2017.
-
 t-Student-Mixture-Models's documentation
 ========================================
 
