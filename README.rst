@@ -60,16 +60,6 @@ Current coverage: 79%. To re-run the coverage test (Ubuntu Ubuntu
 
 Then open 'htmlcov/index.html' and check the line 'src/smm/smm'.
 
-Documentation
-=============
-
-See `doc/smm.html <doc/smm.html>`__. To re-generate the documentation:
-
-::
-
-    cd doc
-    pydoc -w ../src/smm/smm.py
-
 Author
 ======
 
