@@ -123,7 +123,7 @@ class SMM(sklearn.base.BaseEstimator):
         self.n_init = n_init
         self.params = params
         self.init_params = init_params
-        self.converged_ = False
+        #self.converged_ = False
 
     def _expectation_step(self, X):
         """Performs the expectation step of the EM algorithm.
