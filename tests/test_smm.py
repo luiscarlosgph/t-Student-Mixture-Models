@@ -179,7 +179,7 @@ class TestSMM(unittest.TestCase):
 
     def test_one_component_em(self):
         # Data
-        n_samples = 1000000
+        n_samples = 250000
         n_dim = 3
         seed = 6
         np.random.seed(seed)
