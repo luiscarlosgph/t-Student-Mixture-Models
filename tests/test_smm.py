@@ -54,8 +54,8 @@ def print_params(name, mix_t, n_components, means, covars, dfs, weights):
 
 class TestSMM(unittest.TestCase):
 
-    def test_sklearn_check_estimator(self):
-        sklearn.utils.estimator_checks.check_estimator(smm.SMM)
+    #def test_sklearn_check_estimator(self):
+    #    sklearn.utils.estimator_checks.check_estimator(smm.SMM)
 
     def test_cholesky_cov_det(self):
         cv = np.array([[89, 3, 16], [3, 2, 1], [16, 1, 3]])
@@ -179,7 +179,7 @@ class TestSMM(unittest.TestCase):
 
     def test_one_component_em(self):
         # Data
-        n_samples = 250000
+        n_samples = 500000
         n_dim = 3
         seed = 6
         np.random.seed(seed)
@@ -209,7 +209,7 @@ class TestSMM(unittest.TestCase):
 
             # Fit mixture of t-students to data
             mix_t = smm.SMM(n_components=n_components, covariance_type='full', random_state=seed, tol=1e-12,
-                            min_covar=1e-6, n_iter=1000, n_init=1, params='wmcd', init_params='wmcd')
+                            min_covar=1e-6, n_iter=500, n_init=1, params='wmcd', init_params='wmcd')
             mix_t.fit(obs)
 
             # Calculate estimation error
