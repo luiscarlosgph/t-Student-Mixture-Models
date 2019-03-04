@@ -1063,19 +1063,18 @@ class SMM(sklearn.base.BaseEstimator):
 
             # Calculate the coefficient of the gamma functions
             r = np.asarray(df, dtype=np.float64)
-            gamma_coef = np.exp(
-                scipy.special.gammaln((r + n_dim) / 2.0) \
+            
+            log_gamma_coef = scipy.special.gammaln((r + n_dim) / 2.0) \
                 - scipy.special.gammaln(r / 2.0)
-            )
 
             # Calculate the denominator of the multivariate t-Student
-            denom = np.sqrt(cov_det)                \
-                * np.power(np.pi * df, n_dim / 2.0) \
-                * np.power((1 + maha / df), (df + n_dim) / 2)
+            logdenom = np.log(np.sqrt(cov_det))
+            logdenom += n_dim / 2.0 * np.log(np.pi * df)
+            logdenom += (df + n_dim) / 2 * np.log(1 + maha / df)
 
             # Finally calculate the PDF of the class 'c' for all the X 
             # samples
-            prob[:, c] = gamma_coef / denom
+            prob[:, c] = np.exp(log_gamma_coef - logdenom)
 
         return prob
 
