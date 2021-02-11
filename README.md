@@ -37,7 +37,7 @@ python setup.py test
 
 # Coverage
 Current coverage: 79%.
-To re-run the coverage test (Ubuntu Ubuntu 16.04.2 LTS):
+To re-run the coverage test (Ubuntu 16.04.2 LTS):
 ```
 python-coverage run ./setup.py test
 python-coverage html
