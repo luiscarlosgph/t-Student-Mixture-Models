@@ -48,7 +48,7 @@ Then open 'htmlcov/index.html' and check the line 'src/smm/smm'.
 See [t-Student-Mixture-Models documentation](http://t-student-mixture-models.readthedocs.io/en/latest).
 
 # Author
-Luis Carlos Garcia-Peraza Herrera (luis.herrera.14@ucl.ac.uk).
+Luis Carlos Garcia-Peraza Herrera (luiscarlos.gph@gmail.com).
 
 # License
 BSD 3-Clause License, see LICENSE file for more information.
