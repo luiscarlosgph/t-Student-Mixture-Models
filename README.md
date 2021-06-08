@@ -3,19 +3,20 @@ t-Student-Mixture-Models
 [![Build Status](https://travis-ci.org/luiscarlosgph/t-Student-Mixture-Models.svg?branch=master)](https://travis-ci.org/luiscarlosgph/t-Student-Mixture-Models)
 [![Documentation Status](https://readthedocs.org/projects/t-student-mixture-models/badge/?version=latest)](http://t-student-mixture-models.readthedocs.io/en/latest/?badge=latest)  
 Implementation of the paper: 'Robust mixture modelling using the t distribution', D. Peel and G. J. McLachlan.
-Compatible with Python 2.7 and Python 3.
 
+<!--
 Dependencies
 ------------
 * scikit-learn v0.18.1
 * numpy v1.11.0
 * scipy v0.19.0
 * setuptools v36.0.1
+-->
 
 Install with pip
 ----------------
 ```
-$ pip install smm --user
+$ python3 -m pip install smm --user
 ```
 
 Install from source
@@ -23,21 +24,21 @@ Install from source
 ```
 $ git clone https://github.com/luiscarlosgph/t-Student-Mixture-Models.git
 $ cd t-Student-Mixture-Models
-$ python setup.py install --user
+$ python3 setup.py install --user
 ```
 
 Usage
 -----
 See example in [src/smm/example.py](src/smm/example.py). 
 ```
-$ python src/smm/example.py
+$ python3 src/smm/example.py
 ```
 
 Tests
 -----
 To run the tests execute:
 ```
-$ python setup.py test
+$ python3 setup.py test
 ```
 
 Coverage
