@@ -4,7 +4,7 @@ t-Student-Mixture-Models
 [![Documentation Status](https://readthedocs.org/projects/t-student-mixture-models/badge/?version=latest)](http://t-student-mixture-models.readthedocs.io/en/latest/?badge=latest)  
 Implementation of the paper: 'Robust mixture modelling using the t distribution', D. Peel and G. J. McLachlan. 
 
-* Only Python >= 3.8 supported.
+* Only Python >= 3.7 supported.
 * Current code coverage: 76%.
 
 Install with pip
