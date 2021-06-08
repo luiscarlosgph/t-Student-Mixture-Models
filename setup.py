@@ -3,6 +3,12 @@
 import setuptools
 import unittest
 
+# Read the contents of the README file
+from os import path
+this_directory = path.abspath(path.dirname(__file__))
+with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
+    long_description = f.read()
+
 setuptools.setup(name='smm',
     version='0.1.6',
     description='t-Student-Mixture-Models',
@@ -13,6 +19,8 @@ setuptools.setup(name='smm',
     packages=['smm'],
     package_dir={'smm' : 'src/smm'}, 
     test_suite = 'tests',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     classifiers=[
         'Intended Audience :: Developers',
         'Intended Audience :: Science/Research',
