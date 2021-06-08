@@ -2,16 +2,10 @@ t-Student-Mixture-Models
 ------------------------
 [![Build Status](https://travis-ci.org/luiscarlosgph/t-Student-Mixture-Models.svg?branch=master)](https://travis-ci.org/luiscarlosgph/t-Student-Mixture-Models)
 [![Documentation Status](https://readthedocs.org/projects/t-student-mixture-models/badge/?version=latest)](http://t-student-mixture-models.readthedocs.io/en/latest/?badge=latest)  
-Implementation of the paper: 'Robust mixture modelling using the t distribution', D. Peel and G. J. McLachlan.
+Implementation of the paper: 'Robust mixture modelling using the t distribution', D. Peel and G. J. McLachlan. 
 
-<!--
-Dependencies
-------------
-* scikit-learn v0.18.1
-* numpy v1.11.0
-* scipy v0.19.0
-* setuptools v36.0.1
--->
+Only Python >= 3.8 supported.
+Current coverage: 79%.
 
 Install with pip
 ----------------
@@ -34,8 +28,8 @@ See example in [src/example.py](src/example.py).
 $ python3 src/example.py
 ```
 
-Tests
------
+Unit tests
+----------
 To run the tests execute:
 ```
 $ python3 setup.py test
@@ -43,13 +37,13 @@ $ python3 setup.py test
 
 Coverage
 --------
-Current coverage: 79%.
-To re-run the coverage test (Ubuntu 16.04.2 LTS):
+To run the coverage test:
 ```
-$ python-coverage run ./setup.py test
-$ python-coverage html
+$ python3 -m pip install coverage
+$ python3 -m coverage run setup.py test
+$ python3 -m coverage html
 ```
-Then open 'htmlcov/index.html' and check the line 'src/smm/smm'.
+Then open 'htmlcov/index.html' and search for the line containing 'smm/smm.py'.
 
 Documentation
 -------------
