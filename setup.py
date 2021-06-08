@@ -4,7 +4,7 @@ import setuptools
 import unittest
 
 setuptools.setup(name='smm',
-    version='0.1.0',
+    version='0.1.6',
     description='t-Student-Mixture-Models',
     author='Luis C. Garcia-Peraza Herrera',
     author_email='luis.herrera.14@ucl.ac.uk',
