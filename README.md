@@ -29,9 +29,9 @@ $ python3 setup.py install --user
 
 Usage
 -----
-See example in [src/smm/example.py](src/smm/example.py). 
+See example in [src/example.py](src/example.py). 
 ```
-$ python3 src/smm/example.py
+$ python3 src/example.py
 ```
 
 Tests
