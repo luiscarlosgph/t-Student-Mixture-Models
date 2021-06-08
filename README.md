@@ -23,7 +23,6 @@ Install from source
 ```
 $ git clone https://github.com/luiscarlosgph/t-Student-Mixture-Models.git
 $ cd t-Student-Mixture-Models
-$ python setup.py build
 $ python setup.py install --user
 ```
 
