@@ -1,6 +1,6 @@
 t-Student-Mixture-Models
 ------------------------
-[![Build Status](https://travis-ci.org/luiscarlosgph/t-Student-Mixture-Models.svg?branch=master)](https://travis-ci.org/luiscarlosgph/t-Student-Mixture-Models)
+[![Build Status](https://travis-ci.org/luiscarlosgph/t-Student-Mixture-Models.svg?branch=main)](https://travis-ci.org/luiscarlosgph/t-Student-Mixture-Models)
 [![Documentation Status](https://readthedocs.org/projects/t-student-mixture-models/badge/?version=latest)](http://t-student-mixture-models.readthedocs.io/en/latest/?badge=latest)  
 Implementation of the paper: 'Robust mixture modelling using the t distribution', D. Peel and G. J. McLachlan. 
 
