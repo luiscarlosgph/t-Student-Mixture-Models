@@ -21,7 +21,7 @@ setuptools.setup(name='smm',
     test_suite = 'tests',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    install_requires = ['numpy', 'sklearn', 'scipy'],
+    install_requires = ['numpy', 'scikit-learn', 'scipy', 'setuptools'],
     classifiers=[
         'Intended Audience :: Developers',
         'Intended Audience :: Science/Research',
