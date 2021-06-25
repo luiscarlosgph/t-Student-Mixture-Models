@@ -77,25 +77,25 @@ class TestSMM(unittest.TestCase):
         correct_proba = 0.06313533694826684
         X = np.array([[2]])
         dfs = np.array([7])
-        proba = smm.SMM._multivariate_t_student_density_full(
+        logproba = smm.SMM._multivariate_t_student_log_density_full(
             X, means, covars, dfs, min_covar)[0][0]
-        self.assertTrue(np.fabs(correct_proba - proba) < eps)
+        self.assertTrue(np.fabs(correct_proba - np.exp(logproba)) < eps)
 
         # Single-variable probability estimation test
         correct_proba = 0.1288320155351443
         X = np.array([[1.5]])
         dfs = np.array([25])
-        proba = smm.SMM._multivariate_t_student_density_full(
+        logproba = smm.SMM._multivariate_t_student_log_density_full(
             X, means, covars, dfs, min_covar)[0][0]
-        self.assertTrue(np.fabs(correct_proba - proba) < eps)
+        self.assertTrue(np.fabs(correct_proba - np.exp(logproba)) < eps)
 
         # Single-variable probability estimation test
         correct_proba = 0.014979288677507493
         X = np.array([[4.5]])
         dfs = np.array([1])
-        proba = smm.SMM._multivariate_t_student_density_full(
+        logproba = smm.SMM._multivariate_t_student_log_density_full(
             X, means, covars, dfs, min_covar)[0][0]
-        self.assertTrue(np.fabs(correct_proba - proba) < eps)
+        self.assertTrue(np.fabs(correct_proba - np.exp(logproba)) < eps)
 
     def test_univariate_t_student_density_full(self):
         eps = 1e-6
@@ -107,9 +107,9 @@ class TestSMM(unittest.TestCase):
         # Single-variable probability estimation test
         correct_proba = 0.022934460430541256823
         X = np.array([[40]])
-        proba = smm.SMM._multivariate_t_student_density_full(
+        logproba = smm.SMM._multivariate_t_student_log_density_full(
             X, means, covars, dfs, min_covar)[0][0]
-        self.assertTrue(np.fabs(correct_proba - proba) < eps)
+        self.assertTrue(np.fabs(correct_proba - np.exp(logproba)) < eps)
 
     def test_multivariate_t_student_density_full(self):
         eps = 1e-6
@@ -121,16 +121,16 @@ class TestSMM(unittest.TestCase):
         # Multi-variable probability estimation test
         correct_proba = 0.04951629782361236
         X = np.array([[77, 3, 124]])
-        proba = smm.SMM._multivariate_t_student_density_full(
+        logproba = smm.SMM._multivariate_t_student_log_density_full(
             X, means, covars, dfs, min_covar)[0][0]
-        self.assertTrue(np.fabs(correct_proba - proba) < eps)
+        self.assertTrue(np.fabs(correct_proba - np.exp(logproba)) < eps)
 
         # Multi-variable probability estimation test
         correct_scaled_proba = 3.028380928358
         X = np.array([[21.9, 1.2, 120.1]])
-        proba = smm.SMM._multivariate_t_student_density_full(
+        logproba = smm.SMM._multivariate_t_student_log_density_full(
             X, means, covars, dfs, min_covar)[0][0]
-        scaled_proba = proba * 10**15
+        scaled_proba = np.exp(logproba) * 10**15
         self.assertTrue(np.fabs(correct_scaled_proba - scaled_proba) < eps)
 
     def test_multivariate_t_student_density_diag(self):
@@ -143,9 +143,9 @@ class TestSMM(unittest.TestCase):
         # Multi-variable probability estimation test
         correct_scaled_proba = 2.040467514702753
         X = np.array([[21.9, 1.2, 120.1]])
-        proba = smm.SMM._multivariate_t_student_density_diag(
+        logproba = smm.SMM._multivariate_t_student_log_density_diag(
             X, means, covars, dfs, min_covar)[0][0]
-        scaled_proba = proba * 10**7
+        scaled_proba = np.exp(logproba) * 10**7
         self.assertTrue(np.fabs(correct_scaled_proba - scaled_proba) < eps)
 
     def test_multivariate_t_student_density_spherical(self):
@@ -158,9 +158,9 @@ class TestSMM(unittest.TestCase):
         # Multi-variable probability estimation test
         correct_scaled_proba = 1.1638
         X = np.array([[21.9, 1.2, 120.1]])
-        proba = smm.SMM._multivariate_t_student_density_spherical(
+        logproba = smm.SMM._multivariate_t_student_log_density_spherical(
             X, means, covars, dfs, min_covar)[0][0]
-        scaled_proba = proba * 10**8
+        scaled_proba = np.exp(logproba) * 10**8
         self.assertTrue(np.fabs(correct_scaled_proba - scaled_proba) < eps)
 
     def test_multivariate_t_student_density_tied(self):
@@ -173,9 +173,9 @@ class TestSMM(unittest.TestCase):
         # Multi-variable probability estimation test
         correct_proba = 0.04951629782361236
         X = np.array([[77, 3, 124]])
-        proba = smm.SMM._multivariate_t_student_density_tied(
+        logproba = smm.SMM._multivariate_t_student_log_density_tied(
             X, means, covars, dfs, min_covar)[0][0]
-        self.assertTrue(np.fabs(correct_proba - proba) < eps)
+        self.assertTrue(np.fabs(correct_proba - np.exp(logproba)) < eps)
 
     def test_one_component_em(self):
         # Data

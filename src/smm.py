@@ -20,6 +20,19 @@ import scipy.optimize
 import warnings
 
 
+def logsumexp( x, ax=0):
+    
+    y = np.max(x, axis=ax)
+    s = y + np.log( np.sum(np.exp(x-y[:,None]), axis=ax))
+    i = np.isinf(y)
+    
+    if np.any(i):
+        s[i] = y[i]
+
+    return s
+
+
+
 class dofMaximizationError(ValueError):
     def __init__(self, message):
         super(dofMaximizationError, self).__init__(message)
@@ -175,20 +188,17 @@ class SMM(sklearn.base.BaseEstimator):
 
         # Calculate the probability of each point belonging to each 
 		  # t-Student distribution of the mixture
-        pr_before_weighting = self._multivariate_t_student_density(
+        log_pr_before_weighting = self._multivariate_t_student_log_density(
             X, self.means_, self.covars_, self.degrees_, 
             self.covariance_type, self.min_covar
 	)
-        pr = pr_before_weighting * self.weights_
 
+        log_pr = log_pr_before_weighting + np.log( self.weights_ )
+        T = logsumexp( log_pr, ax=1 )
+        responsibilities = np.exp( log_pr - T[:,None] )
+        
         # Calculate the likelihood of each point
-        likelihoods = pr.sum(axis=1)
-
-        # Update responsibilities
-        responsibilities = \
-	    pr / (likelihoods.reshape(likelihoods.shape[0], 1) 
-            + 10 * SMM._EPS
-        )
+        likelihoods = np.exp( T )
 
         # Update the Gamma weight for each observation
         mahalanobis_distance_mix_func = SMM._mahalanobis_funcs[
@@ -510,18 +520,17 @@ class SMM(sklearn.base.BaseEstimator):
         )
 
         # Calculate the probability of each point belonging to each 
-		  # t-Student distribution of the mixture
-        pr = self._multivariate_t_student_density(
+        # # t-Student distribution of the mixture
+        log_pr = self._multivariate_t_student_log_density(
             X, self.means_, self.covars_, self.degrees_,
             self.covariance_type, self.min_covar
-        ) * self.weights_
-
+        ) + np.log( self.weights_ )
+        
+        T = logsumexp( log_pr, ax=1 )
+        responsibilities = np.exp( log_pr - T[:,None] )
+        
         # Calculate the likelihood of each point
-        likelihoods = pr.sum(axis=1)
-
-        # Update responsibilities
-        like_ndarray = likelihoods.reshape(likelihoods.shape[0], 1)
-        responsibilities = pr / (like_ndarray + 10 * SMM._EPS)
+        likelihoods = np.exp( T )
 
         return likelihoods, responsibilities
 
@@ -852,7 +861,7 @@ class SMM(sklearn.base.BaseEstimator):
         return out
 
     @staticmethod
-    def _multivariate_t_student_density_diag(X, means, covars, dfs,
+    def _multivariate_t_student_log_density_diag(X, means, covars, dfs,
 	         min_covar):
         """Multivariate t-Student PDF for a matrix of data points and
         diagonal covariance matrices.
@@ -890,30 +899,25 @@ class SMM(sklearn.base.BaseEstimator):
         assert(covars.shape[1] == means.shape[1])
         assert(covars.shape[1] == n_dim)
 
-        # Calculate inverse and determinant of the covariances
-        inv_covars = 1.0 / covars
-        det_covars = np.prod(covars, axis=1)
-
         # Calculate the value of the numerator
-        num = scipy.special.gamma((dfs + n_dim) / 2.0)
+        lognum  = scipy.special.gammaln((dfs + n_dim) / 2.0)
+        lognum -= scipy.special.gammaln( dfs / 2.0 ) 
 
         # Calculate Mahalanobis distance from all the points to the 
 		  # mean of each component in the mix
         maha = SMM._mahalanobis_distance_mix_diag(X, means, covars, 
             min_covar)
+                
+        logdenom  = (dfs + n_dim) / 2.0 * np.log( 1.0 + maha / dfs )
+        logdenom += 0.5 * np.sum( np.log( covars ), axis=1 )
+        logdenom += n_dim / 2.0 * np.log( np.pi * dfs )
 
-        # Calculate the value of the denominator
-        braces = 1.0 + maha / dfs
-        denom = np.power(np.pi * dfs, n_dim / 2.0) \
-            * scipy.special.gamma(dfs / 2.0)       \
-            * np.sqrt(det_covars)                  \
-            * np.power(braces, (dfs + n_dim) / 2.0)
-        retval = num / denom
+        retval = lognum - logdenom
 
         return retval 
 
     @staticmethod
-    def _multivariate_t_student_density_spherical(X, means, covars, dfs,
+    def _multivariate_t_student_log_density_spherical(X, means, covars, dfs,
             min_covar):
         """Multivariate t-Student PDF for a matrix of data points.
 
@@ -953,14 +957,14 @@ class SMM(sklearn.base.BaseEstimator):
         # i.e. all the elements of the diagonal must be equal
         for k in range(cv.shape[0]):
             assert(np.unique(cv[k]).shape[0] == 1)
-        retval = SMM._multivariate_t_student_density_diag(
+        retval = SMM._multivariate_t_student_log_density_diag(
             X, means, cv, dfs, min_covar
         )
 
         return retval
 
     @staticmethod
-    def _multivariate_t_student_density_tied(X, means, covars, dfs, 
+    def _multivariate_t_student_log_density_tied(X, means, covars, dfs, 
             min_covar):
         """Multivariate t-Student PDF for a matrix of data points.
 
@@ -998,14 +1002,14 @@ class SMM(sklearn.base.BaseEstimator):
         assert(means.shape[1] == covars.shape[0])
 
         cv = np.tile(covars, (means.shape[0], 1, 1))
-        retval = SMM._multivariate_t_student_density_full(
+        retval = SMM._multivariate_t_student_log_density_full(
             X, means, cv, dfs, min_covar
         )
  
         return retval 
 
     @staticmethod
-    def _multivariate_t_student_density_full(X, means, covars, dfs, 
+    def _multivariate_t_student_log_density_full(X, means, covars, dfs, 
             min_covar):
         """Multivariate t-Student PDF for a matrix of data points.
 
@@ -1038,7 +1042,7 @@ class SMM(sklearn.base.BaseEstimator):
 
         n_samples, n_dim = X.shape
         n_components = len(means)
-        prob = np.empty((n_samples, n_components))
+        log_prob = np.empty((n_samples, n_components))
 
         # Sanity check: assert that the received means and covars have 
         # the right shape
@@ -1054,9 +1058,6 @@ class SMM(sklearn.base.BaseEstimator):
             # matrix
             cov_chol = SMM._cholesky(cv, min_covar)
 
-            # Calculate the determinant of the covariance matrix
-            cov_det = np.power(np.prod(np.diagonal(cov_chol)), 2)
-
             # Calculate the Mahalanobis distance between each vector and
 				# the mean
             maha = SMM._mahalanobis_distance_chol(X, mu, cov_chol)
@@ -1068,18 +1069,18 @@ class SMM(sklearn.base.BaseEstimator):
                 - scipy.special.gammaln(r / 2.0)
 
             # Calculate the denominator of the multivariate t-Student
-            logdenom = np.log(np.sqrt(cov_det))
+            logdenom = np.sum( np.log( np.diag( cov_chol ) ) )
             logdenom += n_dim / 2.0 * np.log(np.pi * df)
             logdenom += (df + n_dim) / 2 * np.log(1 + maha / df)
 
             # Finally calculate the PDF of the class 'c' for all the X 
             # samples
-            prob[:, c] = np.exp(log_gamma_coef - logdenom)
+            log_prob[:, c] = log_gamma_coef - logdenom
 
-        return prob
+        return log_prob
 
     @staticmethod
-    def _multivariate_t_student_density(X, means, covars, dfs, cov_type,
+    def _multivariate_t_student_log_density(X, means, covars, dfs, cov_type,
 	         min_covar):
         """Calculates the PDF of the multivariate t-student for a group 
         of samples.
@@ -1123,10 +1124,10 @@ class SMM(sklearn.base.BaseEstimator):
         """
 
         _multivariate_normal_density_dict = {
-            'diag': SMM._multivariate_t_student_density_diag,
-            'spherical': SMM._multivariate_t_student_density_spherical,
-            'tied': SMM._multivariate_t_student_density_tied,
-            'full': SMM._multivariate_t_student_density_full
+            'diag': SMM._multivariate_t_student_log_density_diag,
+            'spherical': SMM._multivariate_t_student_log_density_spherical,
+            'tied': SMM._multivariate_t_student_log_density_tied,
+            'full': SMM._multivariate_t_student_log_density_full
         }
         retval = _multivariate_normal_density_dict[cov_type](
             X, means, covars, dfs, min_covar
