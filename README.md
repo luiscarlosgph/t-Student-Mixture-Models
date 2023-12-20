@@ -1,3 +1,6 @@
+This fork addresses numerical stability issues of the original implementation. Calculation is moved to log-space. 
+
+
 t-Student-Mixture-Models
 ------------------------
 [![Build Status](https://travis-ci.org/luiscarlosgph/t-Student-Mixture-Models.svg?branch=main)](https://travis-ci.org/luiscarlosgph/t-Student-Mixture-Models)
